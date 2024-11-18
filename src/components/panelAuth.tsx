@@ -10,12 +10,14 @@ export const PanelAuth: React.FunctionComponent = () => {
         ofertas exclusivas para ajudar você a fazer a melhor escolha.
       </Subtitle>
 
-      <strong>Descubra:</strong>
-      <ul>
-        <li>- Ofertas exclusivas para você</li>
-        <li>- Avaliações e detalhes completos dos veículos</li>
-        <li>- Segurança e confiança nas transações</li>
-      </ul>
+      <div>
+        <strong>Descubra:</strong>
+        <ul>
+          <li>- Ofertas exclusivas para você</li>
+          <li>- Avaliações e detalhes completos dos veículos</li>
+          <li>- Segurança e confiança nas transações</li>
+        </ul>
+      </div>
     </Panel>
   );
 };
@@ -33,9 +35,13 @@ const Panel = styled.div`
     font-weight: 500;
   }
 
-  h1 {
-    @media (max-width: 450px) {
+  @media (max-width: 450px) {
+    h1 {
       font-size: 20px;
+    }
+
+    div {
+      display: none;
     }
   }
 

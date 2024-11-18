@@ -8,9 +8,11 @@ export const Body = styled.div`
   flex-direction: row;
   gap: 20px;
   justify-content: center;
+  margin-top: 10vh;
 
   @media (max-width: 800px) {
     display: block;
+    margin-top: 0;
   }
 `;
 

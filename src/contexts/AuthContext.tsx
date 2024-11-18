@@ -35,8 +35,6 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
       setAuthInitialized(true);
     });
 
-    console.log("Carregou");
-
     return () => {
       unsub();
     };
