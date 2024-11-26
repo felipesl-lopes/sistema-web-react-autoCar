@@ -1,15 +1,14 @@
 import { signOut } from "firebase/auth";
-import React, { useContext, useState } from "react";
-import { FiMenu } from "react-icons/fi";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../assets/logo-autocar.png";
 import { AuthContext } from "../../contexts/AuthContext";
 import { auth } from "../../services/firebase";
+import { FiMenu } from "react-icons/fi";
 
 const HeaderComponent: React.FunctionComponent = () => {
   const { signed } = useContext(AuthContext);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     const confirm = window.confirm("Você deseja realmente sair?");
@@ -30,7 +29,7 @@ const HeaderComponent: React.FunctionComponent = () => {
           <Logo src={logo} alt="Logo do site" />
         </Link>
 
-        <MenuNav menuOpen={menuOpen}>
+        <MenuNav>
           <TextButtonLink to={signed ? "/dashboard" : "/login"}>
             Comprar
           </TextButtonLink>
@@ -53,8 +52,7 @@ const HeaderComponent: React.FunctionComponent = () => {
             <TextButtonLink to={"/login"}>Entrar</TextButtonLink>
           )}
         </MenuNav>
-
-        <MenuIcon onClick={() => setMenuOpen(!menuOpen)} />
+        <Menu />
       </Header>
     </Container>
   );
@@ -80,35 +78,17 @@ const Header = styled.header`
 
 const Logo = styled.img`
   display: block;
-  width: 40%;
-  aspect-ratio: 16 / 6;
+  width: 90px;
   object-fit: contain;
   margin: 0;
 `;
 
-// const MenuNav = styled.nav`
-//   display: flex;
-//   align-items: center;
-
-//   @media (max-width: 550px) {
-//     display: none;
-//   }
-// `;
-
-const MenuNav = styled.nav<{ menuOpen: boolean }>`
+const MenuNav = styled.nav`
   display: flex;
   align-items: center;
 
-  @media (max-width: 550px) {
-    display: ${({ menuOpen }) => (menuOpen ? "flex" : "none")};
-    flex-direction: column;
-    position: absolute;
-    top: 56px;
-    right: 0;
-    background-color: #0f081e;
-    width: 100%;
-    z-index: 1000;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  @media (max-width: 360px) {
+    display: none;
   }
 `;
 
@@ -128,20 +108,12 @@ const TextButtonLink = styled(Link)`
   }
 `;
 
-const MenuIcon = styled(FiMenu)`
+const Menu = styled(FiMenu)`
   display: none;
   color: white;
-  font-size: 24px;
+  font-size: 20px;
 
-  &:hover {
-    color: #fef49c;
-  }
-
-  &:active {
-    color: #b07223;
-  }
-
-  @media (max-width: 550px) {
+  @media (max-width: 360px) {
     display: flex;
   }
 `;

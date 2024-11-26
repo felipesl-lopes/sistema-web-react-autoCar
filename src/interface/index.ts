@@ -19,3 +19,15 @@ export interface IUser {
   email: string;
   uid: string;
 }
+
+export interface IFormNewCar {
+  inputFile: string;
+  name: string;
+  model: string;
+  year: string;
+  km: string;
+  price: string;
+  city: string;
+  whatsapp: string;
+  description: string;
+}

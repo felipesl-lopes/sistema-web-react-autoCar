@@ -18,21 +18,49 @@ export const ButtonSendComponent: React.FunctionComponent<IProps> = ({
   );
 };
 
+export const ButtonSendComponent2: React.FunctionComponent<IProps> = ({
+  title,
+  onChange,
+  ...otherProps
+}) => {
+  return (
+    <Container2 onClick={onChange} {...otherProps}>
+      <Title>{title}</Title>
+    </Container2>
+  );
+};
+
 const Container = styled.button`
   border-radius: 4px;
   width: 100%;
   background-color: #3485ff;
   border: none;
   cursor: pointer;
+  transition-duration: 0.5s;
 
   &:hover {
     background-color: #237bff;
-    transition-duration: 0.5s;
   }
 
   &:active {
     background-color: #0066ff;
-    transition-duration: 0.5s;
+  }
+`;
+
+const Container2 = styled.button`
+  border-radius: 4px;
+  width: 100%;
+  background-color: #0f081e;
+  border: none;
+  cursor: pointer;
+  transition-duration: 0.5s;
+
+  &:hover {
+    background-color: #2b1753;
+  }
+
+  &:active {
+    background-color: #0f081e;
   }
 `;
 
