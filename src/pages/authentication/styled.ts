@@ -24,6 +24,10 @@ export const Title = styled.h1`
   @media (max-width: 450px) {
     font-size: 24px;
   }
+
+  @media (max-width: 210px) {
+    word-break: break-all;
+  }
 `;
 
 export const Authentication = styled.form`

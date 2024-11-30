@@ -3,6 +3,7 @@ import LayoutComponent from "../components/layout";
 import Login from "../pages/authentication/login";
 import RecoverPassword from "../pages/authentication/recoverPassword";
 import Register from "../pages/authentication/register";
+import ValidateEmail from "../pages/authentication/validateEmail";
 import CarDetails from "../pages/carDetails";
 import Dashboard from "../pages/dashboard";
 import New from "../pages/dashboard/new";
@@ -51,6 +52,11 @@ const router = createBrowserRouter([
     path: "/recoverPassword",
     element: <RecoverPassword />,
   },
+  {
+    path: "/validateEmail",
+    element: <ValidateEmail />,
+  },
 ]);
 
 export { router };
+

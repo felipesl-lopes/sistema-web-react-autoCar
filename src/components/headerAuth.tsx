@@ -34,4 +34,5 @@ export const Logo = styled.img`
   width: 40%;
   aspect-ratio: 16 / 6;
   object-fit: contain;
+  min-width: 60px;
 `;

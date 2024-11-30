@@ -35,38 +35,18 @@ const Panel = styled.div`
     font-weight: 500;
   }
 
-  @media (max-width: 450px) {
-    h1 {
-      font-size: 20px;
-    }
-
-    div {
-      display: none;
-    }
-  }
-
   @media (max-width: 800px) {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 0 20px;
+    display: none;
   }
 `;
 
 const Title = styled.h1`
   margin-bottom: 12px;
   font-size: 1.6rem;
-
-  @media (max-width: 450px) {
-    font-size: 24px;
-  }
 `;
 
 const Subtitle = styled.p`
   font-size: 15px;
   color: #555;
   margin-bottom: 40px;
-
-  @media (max-width: 800px) {
-    margin-bottom: 12px;
-  }
 `;

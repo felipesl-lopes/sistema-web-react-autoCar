@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { IUser } from "../interface";
 import { auth } from "../services/firebase";
@@ -8,6 +8,9 @@ interface IAuthContext {
   user: IUser | null;
   authInitialized: boolean;
   handleInfoUser: (data: IUser) => void;
+  emailVerified: boolean | undefined;
+  loadingButton: boolean;
+  setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IProps {
@@ -20,6 +23,10 @@ export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
+  const [emailVerified, setEmailVerified] = useState<boolean | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (data) => {
@@ -40,6 +47,22 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
     };
   }, []);
 
+  /**
+   * Verificar se o e-mail do usuário está verificado
+   */
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        const userAuth = getAuth().currentUser;
+        if (userAuth) {
+          setEmailVerified(userAuth.emailVerified);
+        }
+      } else {
+        setEmailVerified(false);
+      }
+    })();
+  }, [user]);
+
   const handleInfoUser = (data: IUser) => {
     setUser({
       email: data.email,
@@ -55,6 +78,9 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
         user,
         authInitialized,
         handleInfoUser,
+        emailVerified,
+        loadingButton,
+        setLoadingButton,
       }}
     >
       {children}

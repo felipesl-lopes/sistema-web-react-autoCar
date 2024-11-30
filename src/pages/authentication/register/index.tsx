@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -24,8 +25,8 @@ import { auth } from "../../../services/firebase";
 import { Authentication, Body, Container, Title } from "../styled";
 
 const Register: React.FunctionComponent = () => {
+  const { handleInfoUser, setLoadingButton } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { handleInfoUser } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
@@ -63,6 +64,7 @@ const Register: React.FunctionComponent = () => {
   });
 
   const handleRegister = async (data: IFormRegister) => {
+    setLoadingButton(true);
     await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (user) => {
         await updateProfile(user.user, { displayName: data.name }).then(
@@ -72,13 +74,21 @@ const Register: React.FunctionComponent = () => {
               email: data.email,
               uid: user.user.uid,
             };
+            await sendEmailVerification(user.user);
             handleInfoUser(dataUser);
-            navigate("/dashboard", { replace: true });
+            navigate(
+              `/validateEmail?email=${encodeURIComponent(
+                data.email
+              )}&checkEmail=true`
+            );
           }
         );
       })
       .catch(() => {
         alert("Erro ao cadastrar usuário");
+      })
+      .finally(() => {
+        setLoadingButton(false);
       });
   };
 

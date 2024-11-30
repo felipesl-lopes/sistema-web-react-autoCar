@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sendPasswordResetEmail, signOut } from "firebase/auth";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
@@ -12,8 +12,13 @@ import { Spacer } from "../../../components/spacer";
 import { IFormRecoverPassword, IFormRegister } from "../../../interface";
 import { auth } from "../../../services/firebase";
 import { Authentication, Body, Container, Title } from "../styled";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const RecoverPassword: React.FunctionComponent = () => {
+  const { setLoadingButton } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     (async () => {
       await signOut(auth);
@@ -36,16 +41,23 @@ const RecoverPassword: React.FunctionComponent = () => {
   });
 
   const handleRecoverPassword = async (data: IFormRecoverPassword) => {
+    setLoadingButton(true);
     await sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        alert(
-          "E-mail de redefinição de senha enviado! Verifique sua caixa de entrada."
+        navigate(
+          `/validateEmail?email=${encodeURIComponent(
+            data.email
+          )}&replacePassword=true`,
+          { replace: true }
         );
       })
       .catch(() => {
         alert(
           "Erro ao enviar o e-mail de redefinição de senha. Verifique o e-mail digitado."
         );
+      })
+      .finally(() => {
+        setLoadingButton(false);
       });
   };
 
@@ -58,7 +70,7 @@ const RecoverPassword: React.FunctionComponent = () => {
       <ContainerComponent>
         <Body>
           <Authentication onSubmit={handleSubmit(handleRecoverPassword)}>
-            <Title>Recuperação de senha</Title>
+            <Title>Redefinição de senha</Title>
 
             <Spacer spacing={4} />
 

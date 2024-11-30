@@ -31,3 +31,20 @@ export interface IFormNewCar {
   whatsapp: string;
   description: string;
 }
+
+export interface ICarList {
+  id: string;
+  name: string;
+  year: string;
+  uid: string;
+  price: string;
+  city: string;
+  km: string;
+  images: CarImages[];
+}
+
+interface CarImages {
+  name: string;
+  uid: string;
+  url: string;
+}

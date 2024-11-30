@@ -1,6 +1,11 @@
-import React from "react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ContainerComponent } from "../../components/Container";
 import { Spacer } from "../../components/spacer";
+import { SpinnerLoading } from "../../components/spinnerLoading";
+import { ICarList } from "../../interface";
+import { firestore } from "../../services/firebase";
 import {
   ButtonSearch,
   ContainerInfo,
@@ -16,8 +21,46 @@ import {
   Section,
   Title,
 } from "./styled";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Home: React.FunctionComponent = () => {
+  const [carList, setCarList] = useState<ICarList[]>([]);
+  const [load, setLoad] = useState(true);
+  const { emailVerified, signed } = useContext(AuthContext);
+
+  useEffect(() => {
+    (async () => {
+      const carRef = collection(firestore, "cars");
+      const queryRef = query(carRef, orderBy("created", "desc"));
+
+      getDocs(queryRef).then((snapshot) => {
+        let list = [] as ICarList[];
+        setCarList([]);
+        snapshot.forEach((doc) => {
+          list.push({
+            id: doc.id,
+            name: doc.data().name,
+            year: doc.data().year,
+            uid: doc.data().uid,
+            price: doc.data().price,
+            city: doc.data().city,
+            km: doc.data().km,
+            images: doc.data().images,
+          });
+        });
+
+        setCarList(list);
+      });
+    })();
+  }, []);
+
+  const handleImageLoad = () => {
+    setLoad(false);
+  };
+
+  console.log(emailVerified);
+  console.log(signed);
+
   return (
     <ContainerComponent>
       <Spacer spacing={6} />
@@ -34,20 +77,48 @@ const Home: React.FunctionComponent = () => {
       <Spacer spacing={4} />
 
       <Main>
-        <Section>
-          <ImgCar
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Fiat_Strada_2020_Volcano_in_Montevideo_%28front%29.jpg/800px-Fiat_Strada_2020_Volcano_in_Montevideo_%28front%29.jpg"
-            alt="Imagem carro"
-          />
+        {carList.map((car) => (
+          <Link
+            to={`/car/${car.id}`}
+            key={car.id}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Section>
+              <div
+                style={{
+                  display: load ? "flex" : "none",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  aspectRatio: 16 / 9,
+                }}
+              >
+                <SpinnerLoading size={32} />
+              </div>
+              <ImgCar
+                style={{ display: load ? "none" : "flex" }}
+                src={car.images[0].url}
+                alt="Imagem carro"
+                onLoad={handleImageLoad}
+              />
 
-          <ContainerInfo>
-            <NameCar>Fiat Strada</NameCar>
-            <Description>Ano 2019 | 38.000 km</Description>
-            <Price>R$68.900,00</Price>
-            <Divider />
-            <Locality>Nova Iguaçu, RJ</Locality>
-          </ContainerInfo>
-        </Section>
+              <ContainerInfo>
+                <NameCar>{car.name}</NameCar>
+                <Description>
+                  Ano {car.year} | {car.km} km
+                </Description>
+                <Price>
+                  R$
+                  {parseFloat(car.price).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </Price>
+                <Divider />
+                <Locality>{car.city}</Locality>
+              </ContainerInfo>
+            </Section>
+          </Link>
+        ))}
 
         <Section>
           <ImgCar

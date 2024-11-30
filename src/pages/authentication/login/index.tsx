@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -24,8 +24,10 @@ import {
   RecoverPassword,
   Title,
 } from "../styled";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const Login: React.FunctionComponent = () => {
+  const { setLoadingButton } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,12 +56,16 @@ const Login: React.FunctionComponent = () => {
   });
 
   const handleLogin = async (data: IFormLogin) => {
+    setLoadingButton(true);
     await signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
         navigate("/dashboard", { replace: true });
       })
       .catch(() => {
         alert("Erro ao tentar fazer login.");
+      })
+      .finally(() => {
+        setLoadingButton(false);
       });
   };
 
