@@ -48,3 +48,18 @@ interface CarImages {
   uid: string;
   url: string;
 }
+
+export interface ICar {
+  city: string;
+  created: { seconds: number };
+  description: string;
+  imagens: CarImages[];
+  km: string;
+  model: string;
+  name: string;
+  owner: string;
+  price: string;
+  uid: string;
+  whatsapp: string;
+  year: string;
+}
