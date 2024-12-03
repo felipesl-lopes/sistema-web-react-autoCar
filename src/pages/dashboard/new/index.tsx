@@ -32,6 +32,7 @@ import {
   TextArea,
 } from "./styled";
 import { addDoc, collection } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 interface IImageItemProps {
   uid: string;
@@ -41,7 +42,7 @@ interface IImageItemProps {
 }
 
 const New: React.FunctionComponent = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setLoadingButton } = useContext(AuthContext);
   const [carImages, setCarImages] = useState<IImageItemProps[]>([]);
 
   const schema = z.object({
@@ -75,6 +76,8 @@ const New: React.FunctionComponent = () => {
       return;
     }
 
+    setLoadingButton(true);
+
     const carListImages = carImages.map((car) => {
       return {
         uid: car.uid,
@@ -98,12 +101,15 @@ const New: React.FunctionComponent = () => {
       images: carListImages,
     })
       .then(() => {
-        alert("Veículo cadastrado para venda com sucesso!");
+        toast.success("Veículo cadastrado para venda com sucesso!");
         reset();
         setCarImages([]);
       })
       .catch(() => {
-        alert("Erro ao cadastrar veículo para venda.");
+        toast.error("Erro ao cadastrar veículo para venda.");
+      })
+      .finally(() => {
+        setLoadingButton(false);
       });
   };
 
@@ -113,18 +119,13 @@ const New: React.FunctionComponent = () => {
    * @returns
    */
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (carImages.length >= 10) {
-      alert("Você só pode adicionar até 10 imagens.");
-      return;
-    }
-
     if (e.target.files && e.target.files[0]) {
       const image = e.target.files[0];
 
       if (image.type === "image/jpeg" || image.type === "image/png") {
         await handleUpload(image);
       } else {
-        alert("Envie uma imagem jpeg ou png");
+        toast.error("Envie uma imagem jpeg ou png");
         return;
       }
     }
@@ -158,7 +159,7 @@ const New: React.FunctionComponent = () => {
         });
       })
       .catch(() => {
-        alert("Erro ao fazer upload da imagem");
+        toast.error("Erro ao fazer upload da imagem");
       });
   };
 
@@ -176,7 +177,7 @@ const New: React.FunctionComponent = () => {
         setCarImages(carImages.filter((car) => car.url !== item.url));
       })
       .catch(() => {
-        alert("Erro ao deletar imagem.");
+        toast.error("Erro ao deletar imagem.");
       });
   };
 
@@ -187,7 +188,7 @@ const New: React.FunctionComponent = () => {
   const maxImages = (e: React.MouseEvent<HTMLInputElement>) => {
     if (carImages.length >= 10) {
       e.preventDefault();
-      alert("Você só pode adicionar até 10 imagens.");
+      toast.info("Você só pode adicionar até 10 imagens.");
     }
   };
 
@@ -223,8 +224,8 @@ const New: React.FunctionComponent = () => {
           <InputForm
             errors={errors.name}
             {...register("name")}
-            label="Nome"
-            placeholder="Nome do carro"
+            label="Marca"
+            placeholder="Marca do veículo"
             id="name"
           />
 
@@ -240,8 +241,10 @@ const New: React.FunctionComponent = () => {
             <InputForm
               errors={errors.year}
               {...register("year")}
+              max={new Date().getFullYear()}
+              min={1960}
               label="Ano"
-              placeholder="Ano do veículo"
+              placeholder="2024"
               id="year"
               type="number"
             />
@@ -250,9 +253,10 @@ const New: React.FunctionComponent = () => {
               errors={errors.km}
               {...register("km")}
               label="Km"
-              placeholder="Kms rodados"
+              placeholder="0"
               id="km"
               type="number"
+              min={0}
             />
 
             <InputForm

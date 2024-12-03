@@ -1,23 +1,27 @@
 import { signOut } from "firebase/auth";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { FiMenu } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import logo from "../../assets/logo-autocar.png";
 import { AuthContext } from "../../contexts/AuthContext";
 import { auth } from "../../services/firebase";
-import { FiMenu } from "react-icons/fi";
 
 const HeaderComponent: React.FunctionComponent = () => {
   const { signed } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const confirm = window.confirm("Você deseja realmente sair?");
 
     if (confirm) {
       await signOut(auth)
-        .then(() => {})
+        .then(() => {
+          navigate("/login");
+        })
         .catch(() => {
-          alert("Erro ao deslogar.");
+          toast.error("Erro ao tentar sair.");
         });
     }
   };
@@ -77,10 +81,11 @@ const Header = styled.header`
 `;
 
 const Logo = styled.img`
-  display: block;
-  width: 90px;
+  display: flex;
+  width: 40%;
+  aspect-ratio: 16 / 6;
   object-fit: contain;
-  margin: 0;
+  min-width: 60px;
 `;
 
 const MenuNav = styled.nav`

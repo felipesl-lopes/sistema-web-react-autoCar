@@ -1,15 +1,18 @@
+import { sendEmailVerification, User } from "firebase/auth";
 import React, { useContext } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
 import { HeaderAuth } from "../../../components/headerAuth";
 import { Spacer } from "../../../components/spacer";
-import { Container, Title } from "../styled";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { auth } from "../../../services/firebase";
+import { Container, Title } from "../styled";
 
-const ValidateEmail: React.FunctionComponent = () => {
+const CheckEmail: React.FunctionComponent = () => {
   const { setLoadingButton } = useContext(AuthContext);
 
   const [searchParams] = useSearchParams();
@@ -21,10 +24,28 @@ const ValidateEmail: React.FunctionComponent = () => {
     return <Navigate to={"/"} />;
   }
 
-  const handleVerifiedEmail = () => {
+  const handleVerifiedEmail = async () => {
     setLoadingButton(true);
-    alert("E-mail enviado.");
-    setLoadingButton(false);
+
+    const currentUser = auth.currentUser;
+
+    await sendEmailVerification(currentUser as User)
+      .then(() => {
+        toast.info(
+          "E-mail enviado. Verifique suas caixas de entrada e de spam.",
+          {
+            autoClose: 5000,
+          }
+        );
+      })
+      .catch(() => {
+        toast.error(
+          "Erro ao enviar o e-mail. Verifique se você está logado(a) e tente novamente."
+        );
+      })
+      .finally(() => {
+        setLoadingButton(false);
+      });
   };
 
   return (
@@ -61,7 +82,7 @@ const ValidateEmail: React.FunctionComponent = () => {
 
             <Spacer spacing={7} />
 
-            <ButtonSendComponent title="Enviar novamente" />
+            {checkEmail && <ButtonSendComponent title="Reenviar" />}
 
             <Spacer spacing={1} />
 
@@ -73,7 +94,7 @@ const ValidateEmail: React.FunctionComponent = () => {
   );
 };
 
-export default ValidateEmail;
+export default CheckEmail;
 
 const Body = styled.div`
   display: flex;

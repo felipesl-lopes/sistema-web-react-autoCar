@@ -8,6 +8,7 @@ import {
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
@@ -20,6 +21,7 @@ import {
 import { PanelAuth } from "../../../components/panelAuth";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { getErrorMessage } from "../../../errors/authErrors";
 import { IFormRegister } from "../../../interface";
 import { auth } from "../../../services/firebase";
 import { Authentication, Body, Container, Title } from "../styled";
@@ -77,15 +79,15 @@ const Register: React.FunctionComponent = () => {
             await sendEmailVerification(user.user);
             handleInfoUser(dataUser);
             navigate(
-              `/validateEmail?email=${encodeURIComponent(
+              `/verificar-email?email=${encodeURIComponent(
                 data.email
               )}&checkEmail=true`
             );
           }
         );
       })
-      .catch(() => {
-        alert("Erro ao cadastrar usuário");
+      .catch(async (error) => {
+        toast.error(getErrorMessage(await error.code));
       })
       .finally(() => {
         setLoadingButton(false);

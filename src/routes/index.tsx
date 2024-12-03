@@ -3,12 +3,13 @@ import LayoutComponent from "../components/layout";
 import Login from "../pages/authentication/login";
 import RecoverPassword from "../pages/authentication/recoverPassword";
 import Register from "../pages/authentication/register";
-import ValidateEmail from "../pages/authentication/validateEmail";
+import CheckEmail from "../pages/authentication/verificarEmail";
 import CarDetails from "../pages/carDetails";
 import Dashboard from "../pages/dashboard";
 import New from "../pages/dashboard/new";
 import Home from "../pages/home";
 import { Private } from "./Private";
+import { MyVehicles } from "../pages/dashboard/myVehicles";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
           </Private>
         ),
       },
+      {
+        path: "/dashboard/meus-veiculos",
+        element: <MyVehicles />,
+      },
     ],
   },
   {
@@ -53,10 +58,9 @@ const router = createBrowserRouter([
     element: <RecoverPassword />,
   },
   {
-    path: "/validateEmail",
-    element: <ValidateEmail />,
+    path: "/verificar-email",
+    element: <CheckEmail />,
   },
 ]);
 
 export { router };
-

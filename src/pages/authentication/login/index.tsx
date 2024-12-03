@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
@@ -14,6 +15,8 @@ import {
 } from "../../../components/inputComponent";
 import { PanelAuth } from "../../../components/panelAuth";
 import { Spacer } from "../../../components/spacer";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { getErrorMessage } from "../../../errors/authErrors";
 import { IFormLogin } from "../../../interface";
 import { auth } from "../../../services/firebase";
 import {
@@ -24,7 +27,6 @@ import {
   RecoverPassword,
   Title,
 } from "../styled";
-import { AuthContext } from "../../../contexts/AuthContext";
 
 const Login: React.FunctionComponent = () => {
   const { setLoadingButton } = useContext(AuthContext);
@@ -61,8 +63,8 @@ const Login: React.FunctionComponent = () => {
       .then(() => {
         navigate("/dashboard", { replace: true });
       })
-      .catch(() => {
-        alert("Erro ao tentar fazer login.");
+      .catch(async (error) => {
+        toast.error(getErrorMessage(await error.code));
       })
       .finally(() => {
         setLoadingButton(false);
