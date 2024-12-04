@@ -7,6 +7,13 @@ export const Main = styled.main`
   border-radius: 4px;
 `;
 
+export const SliderCar = styled.img`
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  max-height: 500px;
+`;
+
 export const Title = styled.h1`
   font-size: 24px;
 `;
@@ -14,6 +21,8 @@ export const Title = styled.h1`
 export const DivInfo = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
 
 export const TitleData = styled.strong`
@@ -27,7 +36,12 @@ export const TextInfo = styled.h3`
 
 export const DivInfoBasic = styled.div`
   display: flex;
-  gap: 5%;
+  gap: 30px;
+
+  @media (max-width: 420px) {
+    display: block;
+    grid-column: 10px;
+  }
 `;
 
 export const DivInfoConditions = styled.div`
@@ -35,6 +49,15 @@ export const DivInfoConditions = styled.div`
     display: flex;
     margin-bottom: 4px;
     margin-left: 4px;
+
+    @media (max-width: 455px) {
+      display: block;
+      grid-column: 10px;
+
+      p {
+        margin-left: 0;
+      }
+    }
   }
 
   p {
@@ -47,6 +70,17 @@ export const ContainerAlign = styled.div`
   flex-direction: column;
   align-items: center;
   margin-left: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+
+  @media (max-width: 420px) {
+    flex-direction: row;
+    margin-left: 4px;
+
+    strong {
+      margin-left: 4px;
+    }
+  }
 `;
 
 export const Text = styled.p`
@@ -69,9 +103,15 @@ export const CallButton = styled.a`
   margin: 0 auto;
   width: 100%;
   cursor: pointer;
+  transition: 0.2s ease-in-out;
+  text-decoration: none;
 
   svg {
     margin-left: 8px;
     font-size: 20px;
+  }
+
+  &:hover {
+    transform: scale(1.01);
   }
 `;

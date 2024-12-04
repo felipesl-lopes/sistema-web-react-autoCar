@@ -31,8 +31,7 @@ export const Header = styled.header`
 
 export const Logo = styled.img`
   display: flex;
-  width: 40%;
+  width: 100px;
   aspect-ratio: 16 / 6;
   object-fit: contain;
-  min-width: 60px;
 `;

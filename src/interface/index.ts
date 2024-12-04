@@ -53,7 +53,7 @@ export interface ICar {
   city: string;
   created: { seconds: number };
   description: string;
-  imagens: CarImages[];
+  images: CarImages[];
   km: string;
   model: string;
   name: string;
