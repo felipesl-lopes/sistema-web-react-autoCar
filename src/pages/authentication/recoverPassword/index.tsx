@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { sendPasswordResetEmail, signOut } from "firebase/auth";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +7,12 @@ import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
-import { HeaderAuth } from "../../../components/headerAuth";
 import { InputComponent } from "../../../components/inputComponent";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { getErrorMessage } from "../../../errors/authErrors";
 import { IFormRecoverPassword, IFormRegister } from "../../../interface";
-import { auth } from "../../../services/firebase";
+import axiosService from "../../../services/api";
 import { Authentication, Body, Container, Title } from "../styled";
 
 const RecoverPassword: React.FunctionComponent = () => {
@@ -23,7 +21,7 @@ const RecoverPassword: React.FunctionComponent = () => {
 
   useEffect(() => {
     (async () => {
-      await signOut(auth);
+      await axiosService("/auth/logout");
     })();
   }, []);
 
@@ -44,7 +42,9 @@ const RecoverPassword: React.FunctionComponent = () => {
 
   const handleRecoverPassword = async (data: IFormRecoverPassword) => {
     setLoadingButton(true);
-    await sendPasswordResetEmail(auth, data.email)
+
+    await axiosService
+      .post("/auth/recoverPassword", data)
       .then(() => {
         navigate(
           `/verificar-email?email=${encodeURIComponent(
@@ -54,7 +54,7 @@ const RecoverPassword: React.FunctionComponent = () => {
         );
       })
       .catch(async (error) => {
-        toast.error(getErrorMessage(await error.code));
+        toast.error(getErrorMessage(await error));
       })
       .finally(() => {
         setLoadingButton(false);
@@ -63,8 +63,6 @@ const RecoverPassword: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
-
       <Spacer spacing={5} />
 
       <ContainerComponent>

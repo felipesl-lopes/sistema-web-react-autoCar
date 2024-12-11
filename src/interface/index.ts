@@ -63,3 +63,9 @@ export interface ICar {
   whatsapp: string;
   year: string;
 }
+
+export interface ISliders_Home {
+  route: string;
+  url: string;
+  color: string;
+}

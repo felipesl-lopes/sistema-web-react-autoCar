@@ -1,10 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +7,6 @@ import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
-import { HeaderAuth } from "../../../components/headerAuth";
 import {
   InputComponent,
   InputPasswordComponent,
@@ -23,16 +16,16 @@ import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { getErrorMessage } from "../../../errors/authErrors";
 import { IFormRegister } from "../../../interface";
-import { auth } from "../../../services/firebase";
+import axiosService from "../../../services/api";
 import { Authentication, Body, Container, Title } from "../styled";
 
 const Register: React.FunctionComponent = () => {
-  const { handleInfoUser, setLoadingButton } = useContext(AuthContext);
+  const { setLoadingButton } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      await signOut(auth);
+      await axiosService("/auth/logout");
     })();
   }, []);
 
@@ -67,27 +60,20 @@ const Register: React.FunctionComponent = () => {
 
   const handleRegister = async (data: IFormRegister) => {
     setLoadingButton(true);
-    await createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then(async (user) => {
-        await updateProfile(user.user, { displayName: data.name }).then(
-          async () => {
-            let dataUser = {
-              name: data.name,
-              email: data.email,
-              uid: user.user.uid,
-            };
-            await sendEmailVerification(user.user);
-            handleInfoUser(dataUser);
-            navigate(
-              `/verificar-email?email=${encodeURIComponent(
-                data.email
-              )}&checkEmail=true`
-            );
-          }
+
+    await axiosService
+      .post("/auth/register", data)
+      .then(({ data }) => {
+        console.log(data);
+        navigate(
+          `/verificar-email?email=${encodeURIComponent(
+            data.email
+          )}&checkEmail=true`
         );
       })
       .catch(async (error) => {
-        toast.error(getErrorMessage(await error.code));
+        console.log(error)
+        toast.error(getErrorMessage(await error));
       })
       .finally(() => {
         setLoadingButton(false);
@@ -96,8 +82,6 @@ const Register: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
-
       <Spacer spacing={5} />
 
       <ContainerComponent>

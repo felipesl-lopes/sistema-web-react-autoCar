@@ -1,4 +1,3 @@
-import { signOut } from "firebase/auth";
 import React, { useContext } from "react";
 import { FiMenu } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,22 +5,25 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import logo from "../../assets/logo-autocar.png";
 import { AuthContext } from "../../contexts/AuthContext";
-import { auth } from "../../services/firebase";
+import { getErrorMessage } from "../../errors/authErrors";
+import axiosService from "../../services/api";
 
 const HeaderComponent: React.FunctionComponent = () => {
-  const { signed } = useContext(AuthContext);
+  const { signed, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const confirm = window.confirm("Você deseja realmente sair?");
 
     if (confirm) {
-      await signOut(auth)
+      axiosService
+        .get("/auth/logout")
         .then(() => {
+          setUser(null);
           navigate("/login");
         })
-        .catch(() => {
-          toast.error("Erro ao tentar sair.");
+        .catch(async (error) => {
+          toast.error(getErrorMessage(await error));
         });
     }
   };
@@ -34,13 +36,15 @@ const HeaderComponent: React.FunctionComponent = () => {
         </Link>
 
         <MenuNav>
-          <TextButtonLink to={signed ? "/dashboard" : "/login"}>
-            Comprar
-          </TextButtonLink>
+          <TextButtonLink to={"/"}>Início</TextButtonLink>
 
-          <TextButtonLink to={signed ? "/dashboard/new" : "/login"}>
-            Vender
-          </TextButtonLink>
+          {signed && (
+            <TextButtonLink to={"/dashboard"}>Meus interesses</TextButtonLink>
+          )}
+
+          {signed && (
+            <TextButtonLink to={"/dashboard/new"}>Vender</TextButtonLink>
+          )}
 
           {signed && (
             <TextButtonLink to={signed ? "/dashboard" : "/login"}>

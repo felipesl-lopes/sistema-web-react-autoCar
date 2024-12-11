@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +7,6 @@ import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
-import { HeaderAuth } from "../../../components/headerAuth";
 import {
   InputComponent,
   InputPasswordComponent,
@@ -18,7 +16,7 @@ import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { getErrorMessage } from "../../../errors/authErrors";
 import { IFormLogin } from "../../../interface";
-import { auth } from "../../../services/firebase";
+import axiosService from "../../../services/api";
 import {
   Authentication,
   Body,
@@ -29,12 +27,12 @@ import {
 } from "../styled";
 
 const Login: React.FunctionComponent = () => {
-  const { setLoadingButton } = useContext(AuthContext);
+  const { setLoadingButton, handleInfoUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      await signOut(auth);
+      await axiosService("/auth/logout");
     })();
   }, []);
 
@@ -57,14 +55,17 @@ const Login: React.FunctionComponent = () => {
     resolver: zodResolver(schema),
   });
 
-  const handleLogin = async (data: IFormLogin) => {
+  const onSubmit = async (data: IFormLogin) => {
     setLoadingButton(true);
-    await signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(() => {
+
+    await axiosService
+      .post("/auth/login", data)
+      .then(async ({ data }) => {
+        handleInfoUser(await data);
         navigate("/dashboard", { replace: true });
       })
       .catch(async (error) => {
-        toast.error(getErrorMessage(await error.code));
+        toast.error(getErrorMessage(await error));
       })
       .finally(() => {
         setLoadingButton(false);
@@ -73,15 +74,13 @@ const Login: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
-
       <Spacer spacing={5} />
 
       <ContainerComponent>
         <Body>
           <PanelAuth />
 
-          <Authentication onSubmit={handleSubmit(handleLogin)}>
+          <Authentication onSubmit={handleSubmit(onSubmit)}>
             <Title>Faça o login</Title>
 
             <Spacer spacing={4} />

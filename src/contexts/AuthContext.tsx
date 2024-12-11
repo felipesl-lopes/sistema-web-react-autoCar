@@ -1,7 +1,7 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
+import { getErrorMessage } from "../errors/authErrors";
 import { IUser } from "../interface";
-import { auth } from "../services/firebase";
+import axiosService from "../services/api";
 
 interface IAuthContext {
   signed: boolean;
@@ -11,6 +11,7 @@ interface IAuthContext {
   emailVerified: boolean | undefined;
   loadingButton: boolean;
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
 }
 
 interface IProps {
@@ -29,39 +30,44 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (data) => {
-      if (data) {
-        setUser({
-          name: data.displayName || "",
-          email: data.email || "",
-          uid: data.uid,
-        });
-      } else {
-        setUser(null);
-      }
-      setAuthInitialized(true);
-    });
+    axiosService
+      .get("/auth/login")
+      .then(async ({ data }) => {
+        if (data.uid) {
+          setUser({
+            name: data.name,
+            email: data.email,
+            uid: data.uid,
+          });
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(async (error) => {
+        getErrorMessage(error.code);
+      })
+      .finally(() => {
+        setAuthInitialized(true);
+      });
 
-    return () => {
-      unsub();
-    };
+    return () => {};
   }, []);
 
   /**
    * Verificar se o e-mail do usuário está verificado
    */
   useEffect(() => {
-    (async () => {
-      if (user) {
-        const userAuth = getAuth().currentUser;
-        if (userAuth) {
-          setEmailVerified(userAuth.emailVerified);
-        }
-      } else {
-        setEmailVerified(false);
-      }
-    })();
-  }, [user]);
+    if (authInitialized && user) {
+      axiosService("/auth/validation")
+        .then(({ data }) => {
+          setEmailVerified(data);
+        })
+        .catch((error) => {
+          setEmailVerified(false);
+          getErrorMessage(error);
+        });
+    }
+  }, [authInitialized, user]);
 
   const handleInfoUser = (data: IUser) => {
     setUser({
@@ -74,13 +80,14 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        signed: !!user,
+        signed: !!user?.uid,
         user,
         authInitialized,
         handleInfoUser,
         emailVerified,
         loadingButton,
         setLoadingButton,
+        setUser,
       }}
     >
       {children}

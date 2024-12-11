@@ -1,4 +1,3 @@
-import { sendEmailVerification, User } from "firebase/auth";
 import React, { useContext } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,14 +5,13 @@ import styled from "styled-components";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
-import { HeaderAuth } from "../../../components/headerAuth";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { auth } from "../../../services/firebase";
+import axiosService from "../../../services/api";
 import { Container, Title } from "../styled";
 
 const CheckEmail: React.FunctionComponent = () => {
-  const { setLoadingButton } = useContext(AuthContext);
+  const { setLoadingButton, signed } = useContext(AuthContext);
 
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
@@ -27,9 +25,8 @@ const CheckEmail: React.FunctionComponent = () => {
   const handleVerifiedEmail = async () => {
     setLoadingButton(true);
 
-    const currentUser = auth.currentUser;
-
-    await sendEmailVerification(currentUser as User)
+    await axiosService
+      .post("/auth/verifieldEmail")
       .then(() => {
         toast.info(
           "E-mail enviado. Verifique suas caixas de entrada e de spam.",
@@ -38,9 +35,10 @@ const CheckEmail: React.FunctionComponent = () => {
           }
         );
       })
-      .catch(() => {
+      .catch(async (error) => {
+        console.log(error);
         toast.error(
-          "Erro ao enviar o e-mail. Verifique se você está logado(a) e tente novamente."
+          "Erro ao reenviar e-mail. Tente novamente em alguns instantes."
         );
       })
       .finally(() => {
@@ -50,8 +48,6 @@ const CheckEmail: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
-
       <Spacer spacing={5} />
 
       <ContainerComponent>
@@ -80,9 +76,9 @@ const CheckEmail: React.FunctionComponent = () => {
               <Text>Siga as instruções para redefinir a sua senha.</Text>
             )}
 
-            <Spacer spacing={7} />
+            <Spacer spacing={3} />
 
-            {checkEmail && <ButtonSendComponent title="Reenviar" />}
+            {signed && <ButtonSendComponent title="Reenviar" />}
 
             <Spacer spacing={1} />
 

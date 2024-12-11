@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDoc, collection } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
@@ -8,6 +9,7 @@ import {
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
+import { toast } from "react-toastify";
 import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
 import { ButtonSendComponent2 } from "../../../components/buttonSendComponent";
@@ -31,8 +33,6 @@ import {
   LabelTextArea,
   TextArea,
 } from "./styled";
-import { addDoc, collection } from "firebase/firestore";
-import { toast } from "react-toastify";
 
 interface IImageItemProps {
   uid: string;

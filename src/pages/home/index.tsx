@@ -5,6 +5,7 @@ import CarList from "../../components/lists/carList";
 import { Spacer } from "../../components/spacer";
 import { ICarList } from "../../interface";
 import { firestore } from "../../services/firebase";
+import Sliders_Home from "./sliders-home";
 import { ButtonSearch, ContainerSearch, InputSearch, Title } from "./styled";
 
 const Home: React.FunctionComponent = () => {
@@ -38,12 +39,13 @@ const Home: React.FunctionComponent = () => {
 
   return (
     <ContainerComponent>
-      <Spacer spacing={6} />
-
-      <ContainerSearch>
-        <InputSearch placeholder="Escreva a marca ou modelo do carro" />
-        <ButtonSearch>Pesquisar</ButtonSearch>
-      </ContainerSearch>
+      <div>
+        <Sliders_Home />
+        <ContainerSearch>
+          <InputSearch placeholder="Escreva a marca ou modelo do carro" />
+          <ButtonSearch>Pesquisar</ButtonSearch>
+        </ContainerSearch>
+      </div>
 
       <Spacer spacing={5} />
 

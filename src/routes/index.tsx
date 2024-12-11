@@ -43,23 +43,23 @@ const router = createBrowserRouter([
         path: "/dashboard/meus-veiculos",
         element: <MyVehicles />,
       },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/recoverPassword",
+        element: <RecoverPassword />,
+      },
+      {
+        path: "/verificar-email",
+        element: <CheckEmail />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/recoverPassword",
-    element: <RecoverPassword />,
-  },
-  {
-    path: "/verificar-email",
-    element: <CheckEmail />,
   },
 ]);
 
