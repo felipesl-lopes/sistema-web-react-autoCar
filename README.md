@@ -37,8 +37,9 @@ Packer:
 
 Screenshots:
 -
-![Captura de tela 2024-11-18 150533](https://github.com/user-attachments/assets/1a225bb7-3552-4a05-a7db-470d0152857c)
-![Captura de tela 2024-11-18 150504](https://github.com/user-attachments/assets/b79aba85-5d00-406a-aec8-d7b7938eb469)
+![Captura de tela 2024-12-13 105513](https://github.com/user-attachments/assets/2ed93bf3-a8d3-40da-80ca-63ef05972cbf)
+![Captura de tela 2024-12-13 093623](https://github.com/user-attachments/assets/48e78004-3dd9-4fbf-af05-6ac5258e4ba5)
+
 
 </br>
 
