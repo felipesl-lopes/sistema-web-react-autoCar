@@ -33,14 +33,14 @@ export interface IFormNewCar {
 }
 
 export interface ICarList {
+  uid: string;
   id: string;
   name: string;
   year: string;
-  uid: string;
   price: string;
   city: string;
   km: string;
-  images: CarImages[];
+  images: string;
 }
 
 interface CarImages {
@@ -51,7 +51,7 @@ interface CarImages {
 
 export interface ICar {
   city: string;
-  created: { seconds: number };
+  created: string;
   description: string;
   images: CarImages[];
   km: string;

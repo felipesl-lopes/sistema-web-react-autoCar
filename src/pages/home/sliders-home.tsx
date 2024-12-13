@@ -1,25 +1,22 @@
-import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ISliders_Home } from "../../interface";
-import { firestore } from "../../services/firebase";
+import axiosService from "../../services/api";
 
 const Sliders_Home: React.FunctionComponent = () => {
   const [sliders, setSliders] = useState<ISliders_Home[]>([]);
 
   useEffect(() => {
     (async () => {
-      const refSliders = collection(firestore, "sliders-home");
-
-      await getDocs(refSliders).then((snapshot) => {
+      await axiosService.get("/firestore/sliders").then(({ data }) => {
         let list = [] as ISliders_Home[];
         setSliders([]);
-        snapshot.forEach((doc) => {
+        data.forEach((doc: ISliders_Home) => {
           list.push({
-            route: doc.data().route,
-            url: doc.data().url,
-            color: doc.data().color,
+            route: doc.route,
+            url: doc.url,
+            color: doc.color,
           });
         });
         setSliders(list);

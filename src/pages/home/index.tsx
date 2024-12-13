@@ -1,10 +1,9 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { ContainerComponent } from "../../components/Container";
 import CarList from "../../components/lists/carList";
 import { Spacer } from "../../components/spacer";
 import { ICarList } from "../../interface";
-import { firestore } from "../../services/firebase";
+import axiosService from "../../services/api";
 import Sliders_Home from "./sliders-home";
 import { ButtonSearch, ContainerSearch, InputSearch, Title } from "./styled";
 
@@ -13,25 +12,21 @@ const Home: React.FunctionComponent = () => {
 
   useEffect(() => {
     (async () => {
-      const carRef = collection(firestore, "cars");
-      const queryRef = query(carRef, orderBy("created", "desc"));
-
-      getDocs(queryRef).then((snapshot) => {
+      await axiosService.get("/firestore/carList").then(({ data }) => {
         let list = [] as ICarList[];
         setCarList([]);
-        snapshot.forEach((doc) => {
+        data.forEach((doc: ICarList) => {
           list.push({
+            uid: doc.uid,
             id: doc.id,
-            name: doc.data().name,
-            year: doc.data().year,
-            uid: doc.data().uid,
-            price: doc.data().price,
-            city: doc.data().city,
-            km: doc.data().km,
-            images: doc.data().images,
+            name: doc.name,
+            year: doc.year,
+            price: doc.price,
+            city: doc.city,
+            km: doc.km,
+            images: doc.images,
           });
         });
-
         setCarList(list);
       });
     })();
@@ -53,7 +48,10 @@ const Home: React.FunctionComponent = () => {
 
       <Spacer spacing={4} />
 
-      <CarList carList={carList} />
+      <CarList
+        carList={carList}
+        messageListEmpty="Nenhum veículo para venda foi encontrado."
+      />
     </ContainerComponent>
   );
 };

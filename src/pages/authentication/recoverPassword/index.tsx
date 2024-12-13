@@ -54,7 +54,7 @@ const RecoverPassword: React.FunctionComponent = () => {
         );
       })
       .catch(async (error) => {
-        toast.error(getErrorMessage(await error));
+        toast.error(getErrorMessage(await error.response.data.code));
       })
       .finally(() => {
         setLoadingButton(false);

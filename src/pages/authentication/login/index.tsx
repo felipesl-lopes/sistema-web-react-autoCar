@@ -65,7 +65,7 @@ const Login: React.FunctionComponent = () => {
         navigate("/dashboard", { replace: true });
       })
       .catch(async (error) => {
-        toast.error(getErrorMessage(await error));
+        toast.error(getErrorMessage(await error.response.data.code));
       })
       .finally(() => {
         setLoadingButton(false);

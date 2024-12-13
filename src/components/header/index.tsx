@@ -71,7 +71,6 @@ export default HeaderComponent;
 const Container = styled.div`
   background-color: #0f081e;
   padding: 6px 12px;
-  box-shadow: 0 0 4px;
   height: 56px;
 `;
 
@@ -95,7 +94,7 @@ const MenuNav = styled.nav`
   display: flex;
   align-items: center;
 
-  @media (max-width: 360px) {
+  @media (max-width: 450px) {
     display: none;
   }
 `;
@@ -121,7 +120,7 @@ const Menu = styled(FiMenu)`
   color: white;
   font-size: 20px;
 
-  @media (max-width: 360px) {
+  @media (max-width: 450px) {
     display: flex;
   }
 `;

@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { SpinnerLoading } from "../../spinnerLoading";
 import { ICarList } from "../../../interface";
+import { SpinnerLoading } from "../../spinnerLoading";
 
 interface IProps {
   carList: ICarList[];
+  messageListEmpty: string;
 }
 
-const CarList: React.FunctionComponent<IProps> = ({ carList }) => {
+const CarList: React.FunctionComponent<IProps> = ({
+  carList,
+  messageListEmpty,
+}) => {
   const [load, setLoad] = useState(true);
 
   const handleImageLoad = () => {
@@ -16,50 +20,51 @@ const CarList: React.FunctionComponent<IProps> = ({ carList }) => {
   };
 
   return (
-    <Main>
-      {carList.map((car) => (
-        <Link
-          to={`/car/${car.id}`}
-          key={car.id}
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <Section>
-            <div
-              style={{
-                display: load ? "flex" : "none",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                aspectRatio: 16 / 9,
-              }}
+    <>
+      {carList.length == 0 ? (
+        <MessageEmpty>{messageListEmpty}</MessageEmpty>
+      ) : (
+        <Main>
+          {carList.map((car) => (
+            <Link
+              to={`/car/${car.id}`}
+              key={car.id}
+              style={{ textDecoration: "none", color: "black" }}
             >
-              <SpinnerLoading size={32} />
-            </div>
-            <ImgCar
-              style={{ display: load ? "none" : "flex" }}
-              src={car.images[0].url}
-              alt="Imagem carro"
-              onLoad={handleImageLoad}
-            />
+              <Section>
+                <div
+                  style={{
+                    display: load ? "flex" : "none",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    aspectRatio: 16 / 9,
+                  }}
+                >
+                  <SpinnerLoading size={32} />
+                </div>
+                <ImgCar
+                  style={{ display: load ? "none" : "flex" }}
+                  src={car.images}
+                  alt="Imagem carro"
+                  onLoad={handleImageLoad}
+                />
 
-            <ContainerInfo>
-              <NameCar>{car.name}</NameCar>
-              <Description>
-                Ano {car.year} | {car.km} km
-              </Description>
-              <Price>
-                R$
-                {parseFloat(car.price).toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
-              </Price>
-              <Divider />
-              <Locality>{car.city}</Locality>
-            </ContainerInfo>
-          </Section>
-        </Link>
-      ))}
-    </Main>
+                <ContainerInfo>
+                  <NameCar>{car.name}</NameCar>
+                  <Description>
+                    Ano {car.year} | {car.km} km
+                  </Description>
+                  <Price>R${car.price}</Price>
+                  <Divider />
+                  <Locality>{car.city}</Locality>
+                </ContainerInfo>
+              </Section>
+            </Link>
+          ))}
+        </Main>
+      )}
+    </>
   );
 };
 
@@ -87,14 +92,18 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   border-radius: 8px;
+  overflow: hidden
 `;
 
 const ImgCar = styled.img`
-  width: 100%;
+   width: 100%;
+  max-width: 100%;
+  height: auto;
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  overflow: hidden;
 `;
 
 const ContainerInfo = styled.div`
@@ -128,4 +137,10 @@ const Locality = styled.p`
   color: #999;
   font-size: 0.8em;
   font-weight: bold;
+`;
+
+const MessageEmpty = styled.p`
+  text-align: center;
+  margin: 10px;
+  margin-top: 40px;
 `;

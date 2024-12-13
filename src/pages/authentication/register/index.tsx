@@ -64,7 +64,6 @@ const Register: React.FunctionComponent = () => {
     await axiosService
       .post("/auth/register", data)
       .then(({ data }) => {
-        console.log(data);
         navigate(
           `/verificar-email?email=${encodeURIComponent(
             data.email
@@ -72,8 +71,7 @@ const Register: React.FunctionComponent = () => {
         );
       })
       .catch(async (error) => {
-        console.log(error)
-        toast.error(getErrorMessage(await error));
+        toast.error(getErrorMessage(await error.response.data.code));
       })
       .finally(() => {
         setLoadingButton(false);

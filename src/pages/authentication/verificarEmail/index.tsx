@@ -9,6 +9,7 @@ import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import axiosService from "../../../services/api";
 import { Container, Title } from "../styled";
+import { getErrorMessage } from "../../../errors/authErrors";
 
 const CheckEmail: React.FunctionComponent = () => {
   const { setLoadingButton, signed } = useContext(AuthContext);
@@ -36,10 +37,7 @@ const CheckEmail: React.FunctionComponent = () => {
         );
       })
       .catch(async (error) => {
-        console.log(error);
-        toast.error(
-          "Erro ao reenviar e-mail. Tente novamente em alguns instantes."
-        );
+        toast.error(getErrorMessage(await error.response.data.code));
       })
       .finally(() => {
         setLoadingButton(false);

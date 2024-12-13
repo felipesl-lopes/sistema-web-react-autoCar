@@ -1,4 +1,3 @@
-import { doc, getDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,7 +8,7 @@ import { Spacer } from "../../components/spacer";
 import { SpinnerLoading } from "../../components/spinnerLoading";
 import { AuthContext } from "../../contexts/AuthContext";
 import { ICar } from "../../interface";
-import { firestore } from "../../services/firebase";
+import axiosService from "../../services/api";
 import {
   CallButton,
   ContainerAlign,
@@ -38,30 +37,27 @@ const CarDetails: React.FunctionComponent = () => {
    */
   useEffect(() => {
     (async () => {
-      const carRef = doc(firestore, "cars", id as string);
-
-      await getDoc(carRef)
-        .then((snapshot) => {
-          if (!snapshot.data()) {
-            return navigate("/");
-          }
-
-          const doc = snapshot.data();
+      await axiosService
+        .get(`/firestore/carDetails/${id}`)
+        .then(async ({ data }) => {
           setCar({
-            city: doc?.city,
-            created: doc?.created,
-            description: doc?.description,
-            km: doc?.km,
-            model: doc?.model,
-            name: doc?.name,
-            owner: doc?.owner,
-            price: doc?.price,
-            uid: doc?.uid,
-            whatsapp: doc?.whatsapp,
-            year: doc?.year,
-            images: doc?.images,
+            city: data?.city,
+            created: data?.created,
+            description: data?.description,
+            km: data?.km,
+            model: data?.model,
+            name: data?.name,
+            owner: data?.owner,
+            price: data?.price,
+            uid: data?.uid,
+            whatsapp: data?.whatsapp,
+            year: data?.year,
+            images: data?.images,
           });
-          setSliderPerview(doc?.images.length as number);
+          setSliderPerview(data?.images.length as number);
+        })
+        .catch(() => {
+          navigate("/");
         })
         .finally(() => {
           setLoading(false);
@@ -135,13 +131,7 @@ const CarDetails: React.FunctionComponent = () => {
           <TextInfo>
             {car?.name} {car?.model}
           </TextInfo>
-          <TextInfo>
-            {" "}
-            R$
-            {parseFloat(car?.price as string).toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-            })}
-          </TextInfo>
+          <TextInfo>R${car?.price}</TextInfo>
         </DivInfo>
 
         <Spacer spacing={7} />
@@ -156,7 +146,7 @@ const CarDetails: React.FunctionComponent = () => {
 
           <ContainerAlign>
             <Text>Quilometragem:</Text>
-            <Data>{car?.km}km</Data>
+            <Data>{car?.km} km</Data>
           </ContainerAlign>
         </DivInfoBasic>
 
