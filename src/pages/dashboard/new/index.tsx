@@ -1,11 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDoc, collection } from "firebase/firestore";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
@@ -18,7 +11,7 @@ import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { IFormNewCar } from "../../../interface";
-import { firestore, storage } from "../../../services/firebase";
+import axiosService from "../../../services/api";
 import {
   ButtonFile,
   ContainerInput,
@@ -44,6 +37,7 @@ interface IImageItemProps {
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton } = useContext(AuthContext);
   const [carImages, setCarImages] = useState<IImageItemProps[]>([]);
+  const [load, setLoad] = useState(false);
 
   const schema = z.object({
     name: z.string().min(1),
@@ -86,7 +80,7 @@ const New: React.FunctionComponent = () => {
       };
     });
 
-    await addDoc(collection(firestore, "cars"), {
+    let dataUser = {
       name: data.name,
       model: data.model,
       whatsapp: data.whatsapp,
@@ -97,9 +91,12 @@ const New: React.FunctionComponent = () => {
       description: data.description,
       created: new Date(),
       owner: user?.name,
-      uid: user?.uid,
+      uidUser: user?.uid,
       images: carListImages,
-    })
+    };
+
+    await axiosService
+      .post("/firestore/registerCar", dataUser)
       .then(() => {
         toast.success("Veículo cadastrado para venda com sucesso!");
         reset();
@@ -141,25 +138,29 @@ const New: React.FunctionComponent = () => {
       return;
     }
 
+    setLoad(true);
+
     const currentUid = user?.uid;
     const uidImage = uuidV4();
 
-    const uploadRef = ref(storage, `images/${currentUid}/${uidImage}`);
+    const formData = new FormData();
+    formData.append("currentUid", currentUid);
+    formData.append("uidImage", uidImage);
+    formData.append("image", image);
 
-    await uploadBytes(uploadRef, image)
-      .then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadUrl) => {
-          const imageItem = {
-            name: uidImage,
-            uid: currentUid,
-            previewUrl: URL.createObjectURL(image),
-            url: downloadUrl,
-          };
-          setCarImages((images) => [...images, imageItem]);
-        });
+    await axiosService
+      .post("/storage/uploadBytes", formData)
+      .then(({ data }) => {
+        let imageItem = {
+          name: uidImage,
+          uid: currentUid,
+          previewUrl: URL.createObjectURL(image),
+          url: data,
+        };
+        setCarImages((images) => [...images, imageItem]);
       })
       .catch(() => {
-        toast.error("Erro ao fazer upload da imagem");
+        toast.error("Erro ao fazer upload da imagem.");
       });
   };
 
@@ -170,13 +171,11 @@ const New: React.FunctionComponent = () => {
   const handleDeleteImage = async (item: IImageItemProps) => {
     const imagePath = `images/${item.uid}/${item.name}`;
 
-    const imageRef = ref(storage, imagePath);
-
-    await deleteObject(imageRef)
-      .then(() => {
-        setCarImages(carImages.filter((car) => car.url !== item.url));
-      })
-      .catch(() => {
+    await axiosService
+      .delete("/storage/deleteImage", { params: { imagePath } })
+      .then(() => setCarImages(carImages.filter((car) => car.url !== item.url)))
+      .catch((error) => {
+        console.log(error.response.data.code);
         toast.error("Erro ao deletar imagem.");
       });
   };
@@ -211,7 +210,12 @@ const New: React.FunctionComponent = () => {
           {carImages.map((item) => (
             <DivX key={item.name}>
               <IconX onClick={() => handleDeleteImage(item)} />
-              <ImageCar src={item.previewUrl} alt="Imagem do veículo" />
+              {load && <p>Carregando</p>}
+              <ImageCar
+                onLoad={() => setLoad(false)}
+                src={item.previewUrl}
+                alt="Imagem do veículo"
+              />
             </DivX>
           ))}
         </DivImage>

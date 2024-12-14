@@ -62,7 +62,7 @@ const Login: React.FunctionComponent = () => {
       .post("/auth/login", data)
       .then(async ({ data }) => {
         handleInfoUser(await data);
-        navigate("/dashboard", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch(async (error) => {
         toast.error(getErrorMessage(await error.response.data.code));

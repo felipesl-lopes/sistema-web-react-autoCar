@@ -49,7 +49,7 @@ const CarDetails: React.FunctionComponent = () => {
             name: data?.name,
             owner: data?.owner,
             price: data?.price,
-            uid: data?.uid,
+            uidUser: data?.uidUser,
             whatsapp: data?.whatsapp,
             year: data?.year,
             images: data?.images,
@@ -82,6 +82,16 @@ const CarDetails: React.FunctionComponent = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [car?.images.length]);
+
+  const whatsappLink = (car: ICar) => {
+    if (!car?.whatsapp || !car?.name) return "#"; // Retorna um link vazio se dados estiverem ausentes
+    const num = car?.whatsapp.replace(/\D/g, "");
+    const baseURL = "https://wa.me/55";
+    const message = `Olá, vi esse ${car.name} ${car.model} no site AutoCar e fiquei com interesse!`;
+    const encodedMessage = encodeURIComponent(message);
+
+    return `${baseURL}${num}?text=${encodedMessage}`;
+  };
 
   if (loading) {
     return (
@@ -196,7 +206,7 @@ const CarDetails: React.FunctionComponent = () => {
 
         <TitleData>Descrição:</TitleData>
 
-        <ContainerAlign>
+        <ContainerAlign style={{ alignItems: "flex-start" }}>
           <Text>{car?.description}</Text>
         </ContainerAlign>
 
@@ -223,19 +233,15 @@ const CarDetails: React.FunctionComponent = () => {
 
         <Spacer spacing={10} />
 
-        {user?.uid === car?.uid ? (
+        {!!user && user?.uid === car?.uidUser ? (
           <CallButton
             onClick={removeVehicle}
             style={{ backgroundColor: "#3485ff" }}
           >
-            Excluir veículo
+            Editar informações
           </CallButton>
         ) : (
-          <CallButton
-            href={`https://wa.me/55${car?.whatsapp}?text=Ol%C3%A1%2C%20vi%20esse%20${car?.name}%20no%20site%20AutoCar%20e%20fiquei%20com%20interesse%21
-`}
-            target="_blank"
-          >
+          <CallButton href={whatsappLink(car as ICar)} target="_blank">
             Conversar com o vendedor
             <FaWhatsapp />
           </CallButton>

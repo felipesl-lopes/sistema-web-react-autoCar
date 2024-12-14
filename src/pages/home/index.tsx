@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ContainerComponent } from "../../components/Container";
 import CarList from "../../components/lists/carList";
 import { Spacer } from "../../components/spacer";
@@ -6,9 +6,11 @@ import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import Sliders_Home from "./sliders-home";
 import { ButtonSearch, ContainerSearch, InputSearch, Title } from "./styled";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
@@ -16,16 +18,18 @@ const Home: React.FunctionComponent = () => {
         let list = [] as ICarList[];
         setCarList([]);
         data.forEach((doc: ICarList) => {
-          list.push({
-            uid: doc.uid,
-            id: doc.id,
-            name: doc.name,
-            year: doc.year,
-            price: doc.price,
-            city: doc.city,
-            km: doc.km,
-            images: doc.images,
-          });
+          if (user?.uid !== doc.uidUser) {
+            list.push({
+              uidUser: doc.uidUser,
+              id: doc.id,
+              name: doc.name,
+              year: doc.year,
+              price: doc.price,
+              city: doc.city,
+              km: doc.km,
+              images: doc.images,
+            });
+          }
         });
         setCarList(list);
       });
@@ -36,6 +40,9 @@ const Home: React.FunctionComponent = () => {
     <ContainerComponent>
       <div>
         <Sliders_Home />
+
+        <Spacer spacing={6} />
+
         <ContainerSearch>
           <InputSearch placeholder="Escreva a marca ou modelo do carro" />
           <ButtonSearch>Pesquisar</ButtonSearch>
@@ -52,6 +59,8 @@ const Home: React.FunctionComponent = () => {
         carList={carList}
         messageListEmpty="Nenhum veículo para venda foi encontrado."
       />
+
+      <Spacer spacing={6} />
     </ContainerComponent>
   );
 };

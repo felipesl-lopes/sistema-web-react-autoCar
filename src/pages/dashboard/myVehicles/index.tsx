@@ -24,9 +24,9 @@ export const MyVehicles: React.FunctionComponent = () => {
           let list = [] as ICarList[];
           setCarList([]);
           data.forEach((doc: ICarList) => {
-            if (user?.uid === doc.uid) {
+            if (user?.uid === doc.uidUser) {
               list.push({
-                uid: doc.uid,
+                uidUser: doc.uidUser,
                 id: doc.id,
                 name: doc.name,
                 year: doc.year,

@@ -33,7 +33,7 @@ export interface IFormNewCar {
 }
 
 export interface ICarList {
-  uid: string;
+  uidUser: string;
   id: string;
   name: string;
   year: string;
@@ -59,7 +59,7 @@ export interface ICar {
   name: string;
   owner: string;
   price: string;
-  uid: string;
+  uidUser: string;
   whatsapp: string;
   year: string;
 }
