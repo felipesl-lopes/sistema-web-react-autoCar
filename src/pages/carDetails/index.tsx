@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ContainerComponent } from "../../components/Container";
 import { Spacer } from "../../components/spacer";
 import { SpinnerLoading } from "../../components/spinnerLoading";
 import { AuthContext } from "../../contexts/AuthContext";
+import { getDataAdFirestore } from "../../functions/firestore";
 import { ICar } from "../../interface";
-import axiosService from "../../services/api";
 import {
   CallButton,
   ContainerAlign,
@@ -33,19 +32,19 @@ const CarDetails: React.FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
 
   /**
-   * Função assíncrona para buscar dados da venda no DB.
+   * Função assíncrona para buscar dados do anuncio no DB.
    */
   useEffect(() => {
     (async () => {
-      await axiosService
-        .get(`/firestore/carDetails/${id}`)
-        .then(async ({ data }) => {
+      await getDataAdFirestore(id as string)
+        .then((data) => {
           setCar({
             city: data?.city,
             created: data?.created,
             description: data?.description,
             km: data?.km,
             model: data?.model,
+            uf: data?.uf,
             name: data?.name,
             owner: data?.owner,
             price: data?.price,
@@ -111,12 +110,9 @@ const CarDetails: React.FunctionComponent = () => {
   /**
    * Função para excluir o veículo a venda.
    */
-  const removeVehicle = () => {
-    const confirm = window.confirm("Você deseja realmente excluir o veículo?");
-
-    if (confirm) {
-      toast.success("Excluir veículo");
-    }
+  const deleteAd = () => {
+    // navigate(`/dashboard/new/${id}`);
+    
   };
 
   return (
@@ -222,7 +218,9 @@ const CarDetails: React.FunctionComponent = () => {
 
           <ContainerAlign>
             <Text>Localização:</Text>
-            <Data>{car?.city}</Data>
+            <Data>
+              {car?.city}, {car?.uf}
+            </Data>
           </ContainerAlign>
 
           <ContainerAlign>
@@ -234,11 +232,8 @@ const CarDetails: React.FunctionComponent = () => {
         <Spacer spacing={10} />
 
         {!!user && user?.uid === car?.uidUser ? (
-          <CallButton
-            onClick={removeVehicle}
-            style={{ backgroundColor: "#3485ff" }}
-          >
-            Editar informações
+          <CallButton onClick={deleteAd} style={{ backgroundColor: "#3485ff" }}>
+            Excluir anúncio
           </CallButton>
         ) : (
           <CallButton href={whatsappLink(car as ICar)} target="_blank">

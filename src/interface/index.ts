@@ -28,6 +28,7 @@ export interface IFormNewCar {
   km: string;
   price: string;
   city: string;
+  uf: string;
   whatsapp: string;
   description: string;
 }
@@ -38,6 +39,7 @@ export interface ICarList {
   name: string;
   year: string;
   price: string;
+  uf: string;
   city: string;
   km: string;
   images: string;
@@ -56,6 +58,7 @@ export interface ICar {
   images: CarImages[];
   km: string;
   model: string;
+  uf: string;
   name: string;
   owner: string;
   price: string;
@@ -68,4 +71,11 @@ export interface ISliders_Home {
   route: string;
   url: string;
   color: string;
+}
+
+export interface IImageItemProps {
+  uid: string;
+  name: string;
+  previewUrl: string;
+  url: string;
 }

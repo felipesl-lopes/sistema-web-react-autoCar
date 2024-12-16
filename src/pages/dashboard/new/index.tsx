@@ -1,20 +1,26 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { ChangeEvent, useContext, useState } from "react";
+import axios from "axios";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
 import { ButtonSendComponent2 } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
 import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { IFormNewCar } from "../../../interface";
-import axiosService from "../../../services/api";
+import { createDocCarFirestore } from "../../../functions/firestore";
+import {
+  deleteImage,
+  fileStorage,
+  uploadStorage,
+} from "../../../functions/storage";
+import { IFormNewCar, IImageItemProps } from "../../../interface";
 import {
   ButtonFile,
   ContainerInput,
+  ContainerSelect,
   ContainerTextArea,
   Div,
   DivImage,
@@ -23,21 +29,29 @@ import {
   IconX,
   ImageCar,
   InputFile,
+  Label,
   LabelTextArea,
+  Option,
+  Select,
   TextArea,
 } from "./styled";
 
-interface IImageItemProps {
-  uid: string;
-  name: string;
-  previewUrl: string;
-  url: string;
+interface IUf {
+  nome: string;
+  sigla: string;
+  id: number;
+}
+
+interface ICity {
+  id: number;
+  nome: string;
 }
 
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton } = useContext(AuthContext);
   const [carImages, setCarImages] = useState<IImageItemProps[]>([]);
-  const [load, setLoad] = useState(false);
+  const [ufList, setUfList] = useState<IUf[]>([]);
+  const [cityList, setCityList] = useState<ICity[]>([]);
 
   const schema = z.object({
     name: z.string().min(1),
@@ -45,143 +59,94 @@ const New: React.FunctionComponent = () => {
     year: z.string().min(1),
     km: z.string().min(1),
     price: z.string().min(1),
-    city: z.string().min(1),
     whatsapp: z.string().min(1),
     description: z.string().min(1),
+    uf: z.string().min(1),
+    city: z.string().min(1),
   });
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<IFormNewCar>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      uf: "",
+      city: "",
+    },
   });
 
-  /**
-   * Cadastrar veículo.
-   * @param data
-   * @returns
-   */
   const onSubmit = async (data: IFormNewCar) => {
-    if (carImages.length == 0) {
-      alert("Anexe pelo menos uma imagem.");
-      return;
-    }
-
-    setLoadingButton(true);
-
-    const carListImages = carImages.map((car) => {
-      return {
-        uid: car.uid,
-        name: car.name,
-        url: car.url,
-      };
-    });
-
-    let dataUser = {
-      name: data.name,
-      model: data.model,
-      whatsapp: data.whatsapp,
-      city: data.city,
-      year: data.year,
-      km: data.km,
-      price: data.price,
-      description: data.description,
-      created: new Date(),
-      owner: user?.name,
-      uidUser: user?.uid,
-      images: carListImages,
-    };
-
-    await axiosService
-      .post("/firestore/registerCar", dataUser)
-      .then(() => {
-        toast.success("Veículo cadastrado para venda com sucesso!");
-        reset();
-        setCarImages([]);
-      })
-      .catch(() => {
-        toast.error("Erro ao cadastrar veículo para venda.");
-      })
-      .finally(() => {
-        setLoadingButton(false);
-      });
+    await createDocCarFirestore(
+      data,
+      carImages,
+      setLoadingButton,
+      user,
+      reset,
+      setCarImages
+    );
   };
 
-  /**
-   * Adicionar arquivos no inputFile.
-   * @param e
-   * @returns
-   */
-  const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const image = e.target.files[0];
+  const uf = watch("uf");
+  const city = watch("city");
 
-      if (image.type === "image/jpeg" || image.type === "image/png") {
-        await handleUpload(image);
-      } else {
-        toast.error("Envie uma imagem jpeg ou png");
-        return;
-      }
+  useEffect(() => {
+    (async () => {
+      await axios
+        .get(`https://brasilapi.com.br/api/ibge/uf/v1`)
+        .then(({ data }) => {
+          setUfList([]);
+          let list = [];
+          data.map((uf: IUf) => {
+            list.push({
+              nome: uf.nome,
+              sigla: uf.sigla,
+              id: uf.id,
+            });
+            setUfList(list);
+          });
+        });
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (uf) {
+      (async () => {
+        await axios
+          .get(`https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`)
+          .then(({ data }) => {
+            setCityList([]);
+            let list = [];
+            data.map((city: ICity) => {
+              list.push({
+                id: city.id,
+                nome: city.nome,
+              });
+              setCityList(list);
+            });
+          });
+      })();
     }
+  }, [uf]);
+
+  const handleFileStorage = async (e: ChangeEvent<HTMLInputElement>) => {
+    await fileStorage(e, handleUploadStorage);
   };
 
-  /**
-   * Adicionar arquivos no storage.
-   * @param image
-   * @returns
-   */
-  const handleUpload = async (image: File) => {
-    if (!user?.uid) {
-      return;
-    }
-
-    setLoad(true);
-
-    const currentUid = user?.uid;
-    const uidImage = uuidV4();
-
-    const formData = new FormData();
-    formData.append("currentUid", currentUid);
-    formData.append("uidImage", uidImage);
-    formData.append("image", image);
-
-    await axiosService
-      .post("/storage/uploadBytes", formData)
-      .then(({ data }) => {
-        let imageItem = {
-          name: uidImage,
-          uid: currentUid,
-          previewUrl: URL.createObjectURL(image),
-          url: data,
-        };
-        setCarImages((images) => [...images, imageItem]);
-      })
-      .catch(() => {
-        toast.error("Erro ao fazer upload da imagem.");
-      });
+  const handleUploadStorage = async (image: File) => {
+    await uploadStorage(image, user, setCarImages);
   };
 
-  /**
-   * Deletar arquivos do storage.
-   * @param item
-   */
   const handleDeleteImage = async (item: IImageItemProps) => {
-    const imagePath = `images/${item.uid}/${item.name}`;
-
-    await axiosService
-      .delete("/storage/deleteImage", { params: { imagePath } })
-      .then(() => setCarImages(carImages.filter((car) => car.url !== item.url)))
-      .catch((error) => {
-        console.log(error.response.data.code);
-        toast.error("Erro ao deletar imagem.");
-      });
+    await deleteImage(item, setCarImages, carImages);
   };
 
   /**
-   * Limitar 10 arquivos para registro.
+   * Limitar 10 anexos.
    * @param e
    */
   const maxImages = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -189,6 +154,15 @@ const New: React.FunctionComponent = () => {
       e.preventDefault();
       toast.info("Você só pode adicionar até 10 imagens.");
     }
+  };
+
+  const handleUf = (e: any) => {
+    setValue("uf", e.target.value);
+    setValue("city", "");
+  };
+
+  const handleCity = (e: any) => {
+    setValue("city", e.target.value);
   };
 
   return (
@@ -202,7 +176,7 @@ const New: React.FunctionComponent = () => {
             <InputFile
               type="file"
               accept="image/*"
-              onChange={handleFile}
+              onChange={handleFileStorage}
               onClick={maxImages}
             />
           </ButtonFile>
@@ -210,12 +184,7 @@ const New: React.FunctionComponent = () => {
           {carImages.map((item) => (
             <DivX key={item.name}>
               <IconX onClick={() => handleDeleteImage(item)} />
-              {load && <p>Carregando</p>}
-              <ImageCar
-                onLoad={() => setLoad(false)}
-                src={item.previewUrl}
-                alt="Imagem do veículo"
-              />
+              <ImageCar src={item.previewUrl} alt="Imagem do veículo" />
             </DivX>
           ))}
         </DivImage>
@@ -273,14 +242,49 @@ const New: React.FunctionComponent = () => {
           </ContainerInput>
 
           <ContainerInput>
-            <InputForm
-              errors={errors.city}
-              {...register("city")}
-              label="Cidade"
-              placeholder="Sua cidade"
-              id="city"
-              autoComplete="address-level1"
-            />
+            <ContainerSelect>
+              <Label>Estado</Label>
+              <Select
+                {...register("uf")}
+                onChange={handleUf}
+                style={{
+                  width: "160px",
+                  color: uf === "" ? "gray" : "black",
+                  border: errors.uf && "2px solid #ff3030",
+                }}
+              >
+                <Option disabled value={""} style={{ color: "gray" }}>
+                  Estado
+                </Option>
+                {ufList.map((item, index) => (
+                  <Option key={index} value={item.sigla}>
+                    {item.nome}
+                  </Option>
+                ))}
+              </Select>
+            </ContainerSelect>
+
+            <ContainerSelect>
+              <Label>Cidade</Label>
+              <Select
+                {...register("city")}
+                onChange={handleCity}
+                style={{
+                  width: "220px",
+                  color: city === "" ? "gray" : "black",
+                  border: errors.city && "2px solid #ff3030",
+                }}
+              >
+                <Option disabled value={""} style={{ color: "grey" }}>
+                  Cidade
+                </Option>
+                {cityList.map((item, index) => (
+                  <Option key={index} value={item.nome}>
+                    {item.nome}
+                  </Option>
+                ))}
+              </Select>
+            </ContainerSelect>
 
             <InputForm
               errors={errors.whatsapp}
@@ -304,7 +308,7 @@ const New: React.FunctionComponent = () => {
 
           <Spacer spacing={6} />
 
-          <ButtonSendComponent2 title="Cadastrar" type="submit" />
+          <ButtonSendComponent2 title={"Cadastrar"} type="submit" />
         </Form>
       </Div>
     </ContainerComponent>

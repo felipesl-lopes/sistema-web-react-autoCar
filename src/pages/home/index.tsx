@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { ContainerComponent } from "../../components/Container";
 import CarList from "../../components/lists/carList";
 import { Spacer } from "../../components/spacer";
+import { AuthContext } from "../../contexts/AuthContext";
 import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import Sliders_Home from "./sliders-home";
 import { ButtonSearch, ContainerSearch, InputSearch, Title } from "./styled";
-import { AuthContext } from "../../contexts/AuthContext";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
@@ -26,6 +26,7 @@ const Home: React.FunctionComponent = () => {
               year: doc.year,
               price: doc.price,
               city: doc.city,
+              uf: doc.uf,
               km: doc.km,
               images: doc.images,
             });
@@ -34,7 +35,7 @@ const Home: React.FunctionComponent = () => {
         setCarList(list);
       });
     })();
-  }, []);
+  }, [user]);
 
   return (
     <ContainerComponent>

@@ -115,3 +115,23 @@ export const TextArea = styled.textarea`
     -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   }
 `;
+
+export const ContainerSelect = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const Label = styled.p`
+  font-size: 13px;
+  color: #444;
+  margin: 0 0 2px 2px;
+`;
+
+export const Select = styled.select`
+  padding: 4px;
+  border: 2px solid #999;
+  border-radius: 4px;
+`;
+
+export const Option = styled.option`
+  font-size: 13px;
+`;

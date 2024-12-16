@@ -57,7 +57,7 @@ const CarList: React.FunctionComponent<IProps> = ({
                   </Description>
                   <Price>R${car.price}</Price>
                   <Divider />
-                  <Locality>{car.city}</Locality>
+                  <Locality>{car.city}, {car.uf}</Locality>
                 </ContainerInfo>
               </Section>
             </Link>
