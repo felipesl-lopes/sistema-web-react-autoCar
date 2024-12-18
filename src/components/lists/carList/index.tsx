@@ -51,7 +51,7 @@ const CarList: React.FunctionComponent<IProps> = ({
                 />
 
                 <ContainerInfo>
-                  <NameCar>{car.name}</NameCar>
+                  <NameCar>{car.name} {car.model}</NameCar>
                   <Description>
                     Ano {car.year} | {car.km} km
                   </Description>

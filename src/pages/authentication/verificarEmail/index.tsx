@@ -10,6 +10,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import axiosService from "../../../services/api";
 import { Container, Title } from "../styled";
 import { getErrorMessage } from "../../../errors/authErrors";
+import HeaderAuth from "../../../components/headerAuth";
 
 const CheckEmail: React.FunctionComponent = () => {
   const { setLoadingButton, signed } = useContext(AuthContext);
@@ -46,6 +47,7 @@ const CheckEmail: React.FunctionComponent = () => {
 
   return (
     <Container>
+      <HeaderAuth />
       <Spacer spacing={5} />
 
       <ContainerComponent>

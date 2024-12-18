@@ -6,10 +6,10 @@ import Register from "../pages/authentication/register";
 import CheckEmail from "../pages/authentication/verificarEmail";
 import CarDetails from "../pages/carDetails";
 import Dashboard from "../pages/dashboard";
+import { MyVehicles } from "../pages/dashboard/myVehicles";
 import New from "../pages/dashboard/new";
 import Home from "../pages/home";
 import { Private } from "./Private";
-import { MyVehicles } from "../pages/dashboard/myVehicles";
 
 const router = createBrowserRouter([
   {
@@ -43,24 +43,25 @@ const router = createBrowserRouter([
         path: "/dashboard/meus-veiculos",
         element: <MyVehicles />,
       },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-      {
-        path: "/recoverPassword",
-        element: <RecoverPassword />,
-      },
-      {
-        path: "/verificar-email",
-        element: <CheckEmail />,
-      },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/recoverPassword",
+    element: <RecoverPassword />,
+  },
+  {
+    path: "/verificar-email",
+    element: <CheckEmail />,
   },
 ]);
 
 export { router };
+

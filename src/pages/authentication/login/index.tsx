@@ -25,6 +25,7 @@ import {
   RecoverPassword,
   Title,
 } from "../styled";
+import HeaderAuth from "../../../components/headerAuth";
 
 const Login: React.FunctionComponent = () => {
   const { setLoadingButton, handleInfoUser } = useContext(AuthContext);
@@ -74,6 +75,7 @@ const Login: React.FunctionComponent = () => {
 
   return (
     <Container>
+      <HeaderAuth />
       <Spacer spacing={5} />
 
       <ContainerComponent>

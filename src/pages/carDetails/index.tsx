@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ContainerComponent } from "../../components/Container";
 import { Spacer } from "../../components/spacer";
@@ -8,6 +9,7 @@ import { SpinnerLoading } from "../../components/spinnerLoading";
 import { AuthContext } from "../../contexts/AuthContext";
 import { getDataAdFirestore } from "../../functions/firestore";
 import { ICar } from "../../interface";
+import axiosService from "../../services/api";
 import {
   CallButton,
   ContainerAlign,
@@ -110,9 +112,22 @@ const CarDetails: React.FunctionComponent = () => {
   /**
    * Função para excluir o veículo a venda.
    */
-  const deleteAd = () => {
-    // navigate(`/dashboard/new/${id}`);
-    
+  const deleteAd = async () => {
+    const confirm = window.confirm(
+      "Você deseja realmente excluir esse anúncio?"
+    );
+
+    if (confirm) {
+      await axiosService
+        .delete(`/firestore/deleteAd/${id}`)
+        .then(async () => {
+          navigate("/dashboard");
+          await axiosService
+            .delete(`/storage/deleteImgAd`, { data: car?.images })
+            .then(() => toast.success("Anúncio deletado com sucesso!"));
+        })
+        .catch(() => toast.error("Erro ao tentar deletar o anúncio."));
+    }
   };
 
   return (

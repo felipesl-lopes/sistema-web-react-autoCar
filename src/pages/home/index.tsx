@@ -29,6 +29,7 @@ const Home: React.FunctionComponent = () => {
               uf: doc.uf,
               km: doc.km,
               images: doc.images,
+              model: doc.model,
             });
           }
         });

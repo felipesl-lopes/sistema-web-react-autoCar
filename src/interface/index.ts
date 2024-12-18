@@ -37,9 +37,10 @@ export interface ICarList {
   uidUser: string;
   id: string;
   name: string;
+  model?: string;
   year: string;
   price: string;
-  uf: string;
+  uf?: string;
   city: string;
   km: string;
   images: string;
