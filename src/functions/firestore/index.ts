@@ -35,7 +35,7 @@ export const createDocCarFirestore = async (
     };
   });
 
-  let dataUser = {
+  let dataUser: IFormNewCar = {
     name: data.name,
     model: data.model,
     whatsapp: data.whatsapp,
@@ -45,10 +45,16 @@ export const createDocCarFirestore = async (
     km: data.km,
     price: data.price,
     description: data.description,
-    created: new Date(),
-    owner: user?.name,
-    uidUser: user?.uid,
+    created: new Date().toLocaleDateString(),
     images: carListImages,
+    owner: user?.name as string,
+    uidUser: user?.uid as string,
+    documentationStatus: data.documentationStatus,
+    engine: data.engine,
+    fuel: data.fuel,
+    generalCondition: data.generalCondition,
+    maintenanceHistory: data.maintenanceHistory,
+    transmission: data.transmission,
   };
 
   await axiosService

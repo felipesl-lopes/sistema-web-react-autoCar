@@ -21,7 +21,7 @@ export interface IUser {
 }
 
 export interface IFormNewCar {
-  inputFile: string;
+  inputFile?: string;
   name: string;
   model: string;
   year: string;
@@ -31,6 +31,22 @@ export interface IFormNewCar {
   uf: string;
   whatsapp: string;
   description: string;
+  fuel: string;
+  transmission: string;
+  engine: string;
+  documentationStatus: string;
+  maintenanceHistory: string;
+  generalCondition: string;
+  created: string;
+  owner: string;
+  uidUser: string;
+  images: carListImages[];
+}
+
+interface carListImages {
+  uid: string;
+  name: string;
+  url: string;
 }
 
 export interface ICarList {

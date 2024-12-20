@@ -8,7 +8,7 @@ import { Spacer } from "../../components/spacer";
 import { SpinnerLoading } from "../../components/spinnerLoading";
 import { AuthContext } from "../../contexts/AuthContext";
 import { getDataAdFirestore } from "../../functions/firestore";
-import { ICar } from "../../interface";
+import { ICar, IFormNewCar } from "../../interface";
 import axiosService from "../../services/api";
 import {
   CallButton,
@@ -28,7 +28,7 @@ import {
 const CarDetails: React.FunctionComponent = () => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
-  const [car, setCar] = useState<ICar | null>();
+  const [car, setCar] = useState<IFormNewCar | null>();
   const [sliderPerview, setSliderPerview] = useState<number>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -54,6 +54,12 @@ const CarDetails: React.FunctionComponent = () => {
             whatsapp: data?.whatsapp,
             year: data?.year,
             images: data?.images,
+            documentationStatus: data?.documentationStatus,
+            engine: data?.engine,
+            fuel: data?.fuel,
+            generalCondition: data?.generalCondition,
+            maintenanceHistory: data?.maintenanceHistory,
+            transmission: data?.transmission,
           });
           setSliderPerview(data?.images.length as number);
         })
@@ -178,17 +184,17 @@ const CarDetails: React.FunctionComponent = () => {
         <DivInfoBasic>
           <ContainerAlign>
             <Text>Motor:</Text>
-            <Data>2.0, 150 cv (fixo)</Data>
+            <Data>{car?.engine}</Data>
           </ContainerAlign>
 
           <ContainerAlign>
             <Text>Câmbio:</Text>
-            <Data>Manual (fixo)</Data>
+            <Data>{car?.transmission}</Data>
           </ContainerAlign>
 
           <ContainerAlign>
             <Text>Combustível:</Text>
-            <Data>Gasolina (fixo)</Data>
+            <Data>{car?.fuel}</Data>
           </ContainerAlign>
         </DivInfoBasic>
 
@@ -199,17 +205,17 @@ const CarDetails: React.FunctionComponent = () => {
         <DivInfoConditions>
           <div>
             <Data>Estado geral:</Data>
-            <Text>Sem detalhes, em ótimo estado.</Text>
+            <Text>{car?.generalCondition}</Text>
           </div>
 
           <div>
             <Data>Revisões e Manutenções:</Data>
-            <Text>Revisões em dia na concessionária.</Text>
+            <Text>{car?.maintenanceHistory}</Text>
           </div>
 
           <div>
             <Data>Documentação:</Data>
-            <Text>IPVA 2024 pago, sem débitos.</Text>
+            <Text>{car?.documentationStatus}</Text>
           </div>
         </DivInfoConditions>
 
@@ -251,7 +257,7 @@ const CarDetails: React.FunctionComponent = () => {
             Excluir anúncio
           </CallButton>
         ) : (
-          <CallButton href={whatsappLink(car as ICar)} target="_blank">
+          <CallButton href={whatsappLink(car as IFormNewCar)} target="_blank">
             Conversar com o vendedor
             <FaWhatsapp />
           </CallButton>

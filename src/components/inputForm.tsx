@@ -26,6 +26,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  flex: 1;
+  min-width: 150px; 
 `;
 
 const Label = styled.p`

@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { FiX } from "react-icons/fi";
 
-export const Container = styled.div``;
-
 export const Div = styled.div`
   background-color: white;
   border-radius: 4px;
@@ -87,6 +85,15 @@ export const ContainerInput = styled.main`
   flex-direction: row;
   column-gap: 20px;
   flex-wrap: wrap;
+  width: 100%;
+`;
+
+export const TitleForm = styled.strong`
+  margin-bottom: 16px;
+  color: #777;
+  background-color:rgb(237, 237, 237);
+  text-align: center;
+  padding: 2px;
 `;
 
 export const ContainerTextArea = styled.div`
@@ -97,9 +104,9 @@ export const ContainerTextArea = styled.div`
 `;
 
 export const LabelTextArea = styled.p`
-  font-size: 14px;
+  font-size: 13px;
   color: #444;
-  margin-left: 2px;
+  margin: 0 0 2px 2px;
 `;
 
 export const TextArea = styled.textarea`
@@ -108,6 +115,7 @@ export const TextArea = styled.textarea`
   border: 2px solid #999;
   resize: none;
   height: 70px;
+  min-width: 150px;
 
   &:-webkit-autofill {
     background-color: transparent !important;
@@ -117,6 +125,9 @@ export const TextArea = styled.textarea`
 `;
 
 export const ContainerSelect = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   margin-bottom: 20px;
 `;
 
@@ -130,6 +141,11 @@ export const Select = styled.select`
   padding: 4px;
   border: 2px solid #999;
   border-radius: 4px;
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  min-width: 150px;
 `;
 
 export const Option = styled.option`

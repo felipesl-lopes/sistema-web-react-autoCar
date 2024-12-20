@@ -34,6 +34,7 @@ import {
   Option,
   Select,
   TextArea,
+  TitleForm,
 } from "./styled";
 
 interface IUf {
@@ -52,6 +53,16 @@ const New: React.FunctionComponent = () => {
   const [carImages, setCarImages] = useState<IImageItemProps[]>([]);
   const [ufList, setUfList] = useState<IUf[]>([]);
   const [cityList, setCityList] = useState<ICity[]>([]);
+  const transmissionList = ["Manual", "Automático", "Automatizado"];
+  const fuelList = [
+    "Gasolina",
+    "Etanol",
+    "Diesel",
+    "GNV",
+    "Flex",
+    "Elétrico",
+    "Híbrido",
+  ];
 
   const schema = z.object({
     name: z.string().min(1),
@@ -59,10 +70,16 @@ const New: React.FunctionComponent = () => {
     year: z.string().min(1),
     km: z.string().min(1),
     price: z.string().min(1),
-    whatsapp: z.string().min(1),
+    whatsapp: z.string().min(10),
     description: z.string().min(1),
     uf: z.string().min(1),
     city: z.string().min(1),
+    engine: z.string().min(1),
+    transmission: z.string(),
+    fuel: z.string(),
+    generalCondition: z.string().min(1),
+    documentationStatus: z.string().min(1),
+    maintenanceHistory: z.string().min(1),
   });
 
   const {
@@ -165,6 +182,14 @@ const New: React.FunctionComponent = () => {
     setValue("city", e.target.value);
   };
 
+  const handleTransmission = (e: any) => {
+    setValue("transmission", e.targer.value);
+  };
+
+  const handleFuel = (e: any) => {
+    setValue("fuel", e.target.value);
+  };
+
   return (
     <ContainerComponent>
       <Spacer spacing={6} />
@@ -194,15 +219,16 @@ const New: React.FunctionComponent = () => {
 
       <Div>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <InputForm
-            errors={errors.name}
-            {...register("name")}
-            label="Marca"
-            placeholder="Marca do veículo"
-            id="name"
-          />
-
+          <TitleForm>Informações gerais</TitleForm>
           <ContainerInput>
+            <InputForm
+              errors={errors.name}
+              {...register("name")}
+              label="Marca"
+              placeholder="Marca do veículo"
+              id="name"
+            />
+
             <InputForm
               errors={errors.model}
               {...register("model")}
@@ -210,7 +236,9 @@ const New: React.FunctionComponent = () => {
               placeholder="Modelo do veículo"
               id="model"
             />
+          </ContainerInput>
 
+          <ContainerInput>
             <InputForm
               errors={errors.year}
               {...register("year")}
@@ -241,6 +269,74 @@ const New: React.FunctionComponent = () => {
             />
           </ContainerInput>
 
+          <Spacer spacing={6} />
+
+          <TitleForm>Especificações técnicas</TitleForm>
+          <ContainerInput>
+            <InputForm
+              errors={errors.engine}
+              {...register("engine")}
+              label="Motor"
+              placeholder="Motor"
+              id="engine"
+            />
+
+            <ContainerSelect>
+              <Label>Câmbio</Label>
+              <Select
+                {...register("transmission")}
+                onChange={handleTransmission}
+              >
+                {transmissionList.map((item, index) => (
+                  <Option key={index} value={item}>
+                    {item}
+                  </Option>
+                ))}
+              </Select>
+            </ContainerSelect>
+
+            <ContainerSelect>
+              <Label>Combustível</Label>
+              <Select {...register("fuel")} onChange={handleFuel}>
+                {fuelList.map((item, index) => (
+                  <Option key={index} value={item}>
+                    {item}
+                  </Option>
+                ))}
+              </Select>
+            </ContainerSelect>
+          </ContainerInput>
+
+          <Spacer spacing={6} />
+
+          <TitleForm>Condições</TitleForm>
+          <InputForm
+            errors={errors.generalCondition}
+            {...register("generalCondition")}
+            label="Estado geral"
+            placeholder="Descreva o estado geral do veículo"
+            id="generalCondition"
+          />
+
+          <InputForm
+            errors={errors.maintenanceHistory}
+            {...register("maintenanceHistory")}
+            label="Revisões e manutenção"
+            placeholder="Informe as últimas revisões e manutenções"
+            id="maintenanceHistory"
+          />
+
+          <InputForm
+            errors={errors.documentationStatus}
+            {...register("documentationStatus")}
+            label="Documentação"
+            placeholder="Descreva o estado da documentação"
+            id="documentationStatus"
+          />
+
+          <Spacer spacing={6} />
+
+          <TitleForm>Contato</TitleForm>
           <ContainerInput>
             <ContainerSelect>
               <Label>Estado</Label>
@@ -248,7 +344,6 @@ const New: React.FunctionComponent = () => {
                 {...register("uf")}
                 onChange={handleUf}
                 style={{
-                  width: "160px",
                   color: uf === "" ? "gray" : "black",
                   border: errors.uf && "2px solid #ff3030",
                 }}
@@ -270,7 +365,6 @@ const New: React.FunctionComponent = () => {
                 {...register("city")}
                 onChange={handleCity}
                 style={{
-                  width: "220px",
                   color: city === "" ? "gray" : "black",
                   border: errors.city && "2px solid #ff3030",
                 }}
@@ -290,11 +384,14 @@ const New: React.FunctionComponent = () => {
               errors={errors.whatsapp}
               {...register("whatsapp")}
               label="Telefone / Whatsapp"
-              placeholder="(xx) xxxxx-xxxx"
+              placeholder="Somente DDD e números"
               id="whatsapp"
               type="tel"
+              maxLength={11}
             />
           </ContainerInput>
+
+          <Spacer spacing={6} />
 
           <ContainerTextArea>
             <LabelTextArea>Descrição</LabelTextArea>
@@ -311,6 +408,8 @@ const New: React.FunctionComponent = () => {
           <ButtonSendComponent2 title={"Cadastrar"} type="submit" />
         </Form>
       </Div>
+
+      <Spacer spacing={6} />
     </ContainerComponent>
   );
 };
