@@ -29,10 +29,11 @@ export const InputSearch = styled.input`
 export const ButtonSearch = styled.button`
   margin-left: 8px;
   padding: 6px 8px;
-  background-color: #0f081e;
+  background-color: #3485ff;
   color: #fff;
   border-radius: 4px;
   border: 0;
+  cursor: pointer;
 
   @media (max-width: 350px) {
     width: 100%;

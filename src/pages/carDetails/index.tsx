@@ -257,7 +257,11 @@ const CarDetails: React.FunctionComponent = () => {
             Excluir anúncio
           </CallButton>
         ) : (
-          <CallButton href={whatsappLink(car as IFormNewCar)} target="_blank">
+          <CallButton
+            href={whatsappLink(car as IFormNewCar)}
+            style={{ backgroundColor: "#25d366" }}
+            target="_blank"
+          >
             Conversar com o vendedor
             <FaWhatsapp />
           </CallButton>

@@ -6,33 +6,21 @@ import { AuthContext } from "../contexts/AuthContext";
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   onChange?: () => void;
+  disable?: boolean;
 }
 
 export const ButtonSendComponent: React.FunctionComponent<IProps> = ({
   title,
   onChange,
+  disable,
   ...otherProps
 }) => {
   const { loadingButton } = useContext(AuthContext);
 
   return (
-    <Container onClick={onChange} {...otherProps}>
+    <Container onClick={onChange} disabled={disable} {...otherProps}>
       {loadingButton ? <SpinnerLoading size={20} /> : <Title>{title}</Title>}
     </Container>
-  );
-};
-
-export const ButtonSendComponent2: React.FunctionComponent<IProps> = ({
-  title,
-  onChange,
-  ...otherProps
-}) => {
-  const { loadingButton } = useContext(AuthContext);
-
-  return (
-    <Container2 onClick={onChange} {...otherProps}>
-      {loadingButton ? <SpinnerLoading size={20} /> : <Title>{title}</Title>}
-    </Container2>
   );
 };
 
@@ -55,26 +43,15 @@ const Container = styled.button`
   &:active {
     background-color: #0066ff;
   }
-`;
 
-const Container2 = styled.button`
-  border-radius: 4px;
-  width: 100%;
-  background-color: #0f081e;
-  border: none;
-  cursor: pointer;
-  transition-duration: 0.5s;
-  height: 38px;
-  justify-content: center;
-  display: flex;
-  align-items: center;
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgba(0, 0, 0, 0.2);
 
-  &:hover {
-    background-color: #2b1753;
-  }
-
-  &:active {
-    background-color: #0f081e;
+    &:hover,
+    &:active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
   }
 `;
 

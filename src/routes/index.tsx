@@ -14,6 +14,7 @@ import { Private } from "./Private";
 const router = createBrowserRouter([
   {
     element: <LayoutComponent />,
+    // Rotas do header superior
     children: [
       {
         path: "/",
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
         path: "/car/:id",
         element: <CarDetails />,
       },
+
+      // Rotas do header inferior
       {
         path: "/dashboard",
         element: (
@@ -41,10 +44,16 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/meus-veiculos",
-        element: <MyVehicles />,
+        element: (
+          <Private>
+            <MyVehicles />
+          </Private>
+        ),
       },
     ],
   },
+
+  // Rotas sem header
   {
     path: "/login",
     element: <Login />,
@@ -64,4 +73,3 @@ const router = createBrowserRouter([
 ]);
 
 export { router };
-

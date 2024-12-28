@@ -66,17 +66,13 @@ const Register: React.FunctionComponent = () => {
       .post("/auth/register", data)
       .then(({ data }) => {
         navigate(
-          `/verificar-email?email=${encodeURIComponent(
-            data.email
-          )}&checkEmail=true`
+          `/verificar-email?email=${encodeURIComponent(data)}&checkEmail=true`
         );
       })
-      .catch(async (error) => {
-        toast.error(getErrorMessage(await error.response.data.code));
-      })
-      .finally(() => {
-        setLoadingButton(false);
-      });
+      .catch(async (error) =>
+        toast.error(getErrorMessage(await error.response.data.code))
+      )
+      .finally(() => setLoadingButton(false));
   };
 
   return (

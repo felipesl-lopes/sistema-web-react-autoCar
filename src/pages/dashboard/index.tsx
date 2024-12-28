@@ -1,41 +1,74 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { ContainerComponent } from "../../components/Container";
-import { AuthContext } from "../../contexts/AuthContext";
+import Address from "./components/tabs/address";
+import Email from "./components/tabs/email";
+import Phone from "./components/tabs/phone";
+import { Photo } from "./components/tabs/photo";
+import {
+  Container,
+  ContainerTabButtons,
+  ContainerTabIten,
+  TabButton,
+  Title,
+} from "./styled";
 
 const Dashboard: React.FunctionComponent = () => {
-  const { user, emailVerified } = useContext(AuthContext);
+  const [activeTab, setActiveTab] = useState("photo");
 
   return (
     <ContainerComponent>
-      <div>
-        {user && <p>{user.name}</p>}
-        {emailVerified ? (
-          <Link to={"/dashboard/meus-veiculos"}>Meus veículos</Link>
-        ) : (
-          <Link
-            to={`/verificar-email?email=${encodeURIComponent(
-              user?.email as string
-            )}&checkEmail=true`}
-          >
-            Verifique sua conta para vender
-          </Link>
-        )}
+      <Title>Editar informações</Title>
 
-        {!emailVerified && (
-          <h2>
-            Verifique o seu e-mail{" "}
-            <Link
-              to={`/verificar-email?email=${encodeURIComponent(
-                user?.email as string
-              )}&checkEmail=true`}
-            >
-              agora
-            </Link>
-            .
-          </h2>
-        )}
-      </div>
+      <Container>
+        <ContainerTabButtons>
+          <TabButton
+            onClick={() => setActiveTab("photo")}
+            style={{
+              textDecoration: activeTab === "photo" ? "underline" : "none",
+            }}
+          >
+            Foto de Perfil
+          </TabButton>
+
+          <TabButton
+            onClick={() => setActiveTab("email")}
+            style={{
+              textDecoration: activeTab === "email" ? "underline" : "none",
+            }}
+          >
+            E-mail
+          </TabButton>
+
+          <TabButton
+            onClick={() => setActiveTab("address")}
+            style={{
+              textDecoration: activeTab === "address" ? "underline" : "none",
+            }}
+          >
+            Endereço
+          </TabButton>
+
+          <TabButton
+            onClick={() => setActiveTab("phone")}
+            style={{
+              textDecoration: activeTab === "phone" ? "underline" : "none",
+            }}
+          >
+            Telefone
+          </TabButton>
+        </ContainerTabButtons>
+
+        {/* Conteúdo das abas */}
+        <ContainerTabIten>
+          {activeTab === "photo" && <Photo />}
+
+          {activeTab === "email" && <Email />}
+
+          {activeTab === "address" && <Address />}
+
+          {activeTab === "phone" && <Phone />}
+        </ContainerTabIten>
+      </Container>
     </ContainerComponent>
   );
 };

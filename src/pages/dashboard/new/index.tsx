@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { ButtonSendComponent2 } from "../../../components/buttonSendComponent";
+import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
 import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
@@ -405,7 +405,7 @@ const New: React.FunctionComponent = () => {
 
           <Spacer spacing={6} />
 
-          <ButtonSendComponent2 title={"Cadastrar"} type="submit" />
+          <ButtonSendComponent title={"Anunciar"} type="submit" />
         </Form>
       </Div>
 

@@ -92,7 +92,6 @@ export const Data = styled.strong`
 `;
 
 export const CallButton = styled.a`
-  background-color: #25d366;
   color: white;
   align-items: center;
   justify-content: center;
@@ -109,9 +108,5 @@ export const CallButton = styled.a`
   svg {
     margin-left: 8px;
     font-size: 20px;
-  }
-
-  &:hover {
-    transform: scale(1.01);
   }
 `;
