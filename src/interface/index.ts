@@ -21,6 +21,7 @@ export interface IUser {
   whatsapp: string;
   city: string;
   uf: string;
+  urlPhoto: string;
 }
 
 export interface IFormNewCar {

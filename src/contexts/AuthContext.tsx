@@ -41,6 +41,7 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
             whatsapp: data.whatsapp,
             city: data.city,
             uf: data.uf,
+            urlPhoto: data.urlPhoto,
           });
         } else {
           setUser(null);
@@ -80,6 +81,7 @@ const AuthProvider: React.FunctionComponent<IProps> = ({ children }) => {
       whatsapp: data.whatsapp,
       city: data.city,
       uf: data.uf,
+      urlPhoto: data.urlPhoto,
     });
   };
 

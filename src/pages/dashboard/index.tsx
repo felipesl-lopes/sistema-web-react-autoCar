@@ -27,7 +27,7 @@ const Dashboard: React.FunctionComponent = () => {
               textDecoration: activeTab === "photo" ? "underline" : "none",
             }}
           >
-            Foto de Perfil
+            Foto de perfil
           </TabButton>
 
           <TabButton
@@ -58,7 +58,6 @@ const Dashboard: React.FunctionComponent = () => {
           </TabButton>
         </ContainerTabButtons>
 
-        {/* Conteúdo das abas */}
         <ContainerTabIten>
           {activeTab === "photo" && <Photo />}
 

@@ -13,7 +13,11 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
       <Header>
         <DivSection>
           <ComponentImage>
-            <FiUser size={64} />
+            {!user?.urlPhoto ? (
+              <FiUser size={64} />
+            ) : (
+              <Image src={user.urlPhoto} />
+            )}
           </ComponentImage>
           <DivUser style={{ width: "360px" }}>
             <Name>{user?.name}</Name>
@@ -27,6 +31,7 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
                 </strong>
               </InfoUser>
 
+              {/* A condição deve ser feita fora e não dentro do InfoUser */}
               <InfoUser>
                 {!!user?.city ? (
                   <strong>
@@ -109,6 +114,13 @@ const ComponentImage = styled.div`
   svg {
     display: flex;
   }
+`;
+
+const Image = styled.img`
+  object-fit: cover;
+  border-radius: 100px;
+  width: 120px;
+  height: 120px;
 `;
 
 const DivUser = styled.div`
