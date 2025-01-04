@@ -31,31 +31,26 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
                 </strong>
               </InfoUser>
 
-              {/* A condição deve ser feita fora e não dentro do InfoUser */}
-              <InfoUser>
-                {!!user?.city ? (
-                  <strong>
-                    {user.uf}, {user.city}
-                  </strong>
-                ) : (
-                  <strong>Adicione seu endereço</strong>
-                )}
-              </InfoUser>
+              {!!user?.city ? (
+                <InfoUser>
+                  {user.uf}, {user.city}
+                </InfoUser>
+              ) : (
+                <strong>Adicione seu endereço</strong>
+              )}
 
-              <InfoUser>
-                {!!user?.whatsapp ? (
-                  <strong>{`(${user.whatsapp.slice(
-                    0,
-                    2
-                  )}) ${user.whatsapp.slice(2, 7)}-${user.whatsapp.slice(
-                    7,
-                    12
-                  )}`}</strong>
-                ) : (
-                  <strong>Adicione seu telefone</strong>
-                )}
-              </InfoUser>
+              {!!user?.whatsapp ? (
+                <InfoUser>
+                  {`(${user.whatsapp.slice(0, 2)}) ${user.whatsapp.slice(
+                    2,
+                    7
+                  )}-${user.whatsapp.slice(7, 12)}`} <strong>(não verificado)</strong>
+                </InfoUser>
+              ) : (
+                <strong>Adicione seu telefone</strong>
+              )}
             </div>
+
             <ButtonEditInfo onClick={() => navigate("/dashboard")}>
               Editar informações
             </ButtonEditInfo>

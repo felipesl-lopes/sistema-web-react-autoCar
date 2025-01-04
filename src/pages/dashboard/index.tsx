@@ -9,15 +9,16 @@ import {
   ContainerTabButtons,
   ContainerTabIten,
   TabButton,
-  Title,
+  TitleDashboard,
 } from "./styled";
+import { Spacer } from "../../components/spacer";
 
 const Dashboard: React.FunctionComponent = () => {
   const [activeTab, setActiveTab] = useState("photo");
 
   return (
     <ContainerComponent>
-      <Title>Editar informações</Title>
+      <TitleDashboard>Editar informações</TitleDashboard>
 
       <Container>
         <ContainerTabButtons>
@@ -68,6 +69,8 @@ const Dashboard: React.FunctionComponent = () => {
           {activeTab === "phone" && <Phone />}
         </ContainerTabIten>
       </Container>
+
+      <Spacer spacing={10} />
     </ContainerComponent>
   );
 };

@@ -1,16 +1,46 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { ChangeEvent, useContext, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FiImage, FiTrash, FiUser } from "react-icons/fi";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import { z } from "zod";
 import { ButtonSendComponent } from "../../../../components/buttonSendComponent";
 import { Spacer } from "../../../../components/spacer";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import axiosService from "../../../../services/api";
 
+interface IProps {
+  imagePreview: string;
+}
+
 export const Photo: React.FunctionComponent = () => {
   const { user, setLoadingButton } = useContext(AuthContext);
-  const [imagePreview, setImagePreview] = useState(user?.urlPhoto || "");
   const [imageFile, setImageFile] = useState<File>();
+
+  const schema = z.object({
+    imagePreview: z.string(),
+  });
+
+  const defaultValues = useMemo(
+    () => ({
+      imagePreview: user?.urlPhoto || "",
+    }),
+    [user?.urlPhoto]
+  );
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { isDirty },
+  } = useForm<IProps>({
+    resolver: zodResolver(schema),
+    defaultValues,
+  });
+
+  const imagePreview = watch("imagePreview");
 
   const handleFileStorage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -18,7 +48,7 @@ export const Photo: React.FunctionComponent = () => {
 
     if (file?.type === "image/jpeg" || file?.type === "image/png") {
       const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      setValue("imagePreview", previewUrl, { shouldDirty: true });
     } else {
       toast.error("Envie uma imagem jpeg ou png");
       return;
@@ -26,16 +56,11 @@ export const Photo: React.FunctionComponent = () => {
   };
 
   const handleDeleteImage = async () => {
-    setImagePreview("");
+    setValue("imagePreview", "", { shouldDirty: true });
     setImageFile(undefined);
   };
 
   const handleUpdatePhotoUser = async () => {
-    if (!imagePreview && !user?.urlPhoto) {
-      toast.info("Não tem imagem.");
-      return;
-    }
-
     const currentUid = user?.uid;
     setLoadingButton(true);
 
@@ -60,12 +85,7 @@ export const Photo: React.FunctionComponent = () => {
   };
 
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdatePhotoUser();
-      }}
-    >
+    <Form onSubmit={handleSubmit(handleUpdatePhotoUser)}>
       <div>
         <ComponentImage>
           {imagePreview ? <Image src={imagePreview} /> : <FiUser size={150} />}
@@ -78,6 +98,7 @@ export const Photo: React.FunctionComponent = () => {
             <ButtonImg>
               <FiImage /> Adicionar foto
               <InputFile
+                {...register("imagePreview")}
                 type="file"
                 accept="image/*"
                 onChange={handleFileStorage}
@@ -104,7 +125,7 @@ export const Photo: React.FunctionComponent = () => {
 
       <Spacer spacing={10} />
 
-      <ButtonSendComponent title="Salvar" />
+      <ButtonSendComponent title="Salvar" disable={!isDirty} />
     </Form>
   );
 };

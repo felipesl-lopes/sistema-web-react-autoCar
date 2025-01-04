@@ -27,7 +27,7 @@ const spin = keyframes`
 
 const Spinner = styled.div`
   border: 3px solid #ccc;
-  border-top: 3px solid #0000cd;
+  border-top: 3px solid transparent;
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
 `;
