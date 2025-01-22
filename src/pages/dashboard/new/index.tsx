@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
@@ -11,12 +10,8 @@ import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { createDocCarFirestore } from "../../../functions/firestore";
-import {
-  deleteImage,
-  fileStorage,
-  uploadStorage,
-} from "../../../functions/storage";
-import { IFormNewCar, IImageItemProps } from "../../../interface";
+import { IFormNewCar } from "../../../interface";
+import ContainerContactUser from "./components/containerContactUser";
 import {
   ButtonFile,
   ContainerInput,
@@ -37,22 +32,8 @@ import {
   TitleForm,
 } from "./styled";
 
-interface IUf {
-  nome: string;
-  sigla: string;
-  id: number;
-}
-
-interface ICity {
-  id: number;
-  nome: string;
-}
-
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton } = useContext(AuthContext);
-  const [carImages, setCarImages] = useState<IImageItemProps[]>([]);
-  const [ufList, setUfList] = useState<IUf[]>([]);
-  const [cityList, setCityList] = useState<ICity[]>([]);
   const transmissionList = ["Manual", "Automático", "Automatizado"];
   const fuelList = [
     "Gasolina",
@@ -63,6 +44,9 @@ const New: React.FunctionComponent = () => {
     "Elétrico",
     "Híbrido",
   ];
+  const [listImages, setListImages] = useState<
+    { previewUrl: string; file: File }[]
+  >([]);
 
   const schema = z.object({
     name: z.string().min(1),
@@ -70,10 +54,7 @@ const New: React.FunctionComponent = () => {
     year: z.string().min(1),
     km: z.string().min(1),
     price: z.string().min(1),
-    whatsapp: z.string().min(10),
     description: z.string().min(1),
-    uf: z.string().min(1),
-    city: z.string().min(1),
     engine: z.string().min(1),
     transmission: z.string(),
     fuel: z.string(),
@@ -87,7 +68,6 @@ const New: React.FunctionComponent = () => {
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<IFormNewCar>({
     resolver: zodResolver(schema),
@@ -99,67 +79,33 @@ const New: React.FunctionComponent = () => {
 
   const onSubmit = async (data: IFormNewCar) => {
     await createDocCarFirestore(
+      listImages,
       data,
-      carImages,
       setLoadingButton,
       user,
       reset,
-      setCarImages
+      setListImages
     );
   };
 
-  const uf = watch("uf");
-  const city = watch("city");
-
-  useEffect(() => {
-    (async () => {
-      await axios
-        .get(`https://brasilapi.com.br/api/ibge/uf/v1`)
-        .then(({ data }) => {
-          setUfList([]);
-          let list = [];
-          data.map((uf: IUf) => {
-            list.push({
-              nome: uf.nome,
-              sigla: uf.sigla,
-              id: uf.id,
-            });
-            setUfList(list);
-          });
-        });
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (uf) {
-      (async () => {
-        await axios
-          .get(`https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`)
-          .then(({ data }) => {
-            setCityList([]);
-            let list = [];
-            data.map((city: ICity) => {
-              list.push({
-                id: city.id,
-                nome: city.nome,
-              });
-              setCityList(list);
-            });
-          });
-      })();
-    }
-  }, [uf]);
-
   const handleFileStorage = async (e: ChangeEvent<HTMLInputElement>) => {
-    await fileStorage(e, handleUploadStorage);
+    const file = e.target.files?.[0];
+
+    if (file?.type === "image/jpeg" || file?.type === "image/png") {
+      const previewUrl = URL.createObjectURL(file);
+      if (file) {
+        setListImages((prevList) => [...prevList, { file, previewUrl }]);
+      }
+    } else {
+      toast.error("Envie uma imagem jpeg ou png");
+      return;
+    }
   };
 
-  const handleUploadStorage = async (image: File) => {
-    await uploadStorage(image, user, setCarImages);
-  };
-
-  const handleDeleteImage = async (item: IImageItemProps) => {
-    await deleteImage(item, setCarImages, carImages);
+  const handleDeleteImage = async (item: string) => {
+    setListImages((prevList) =>
+      prevList.filter((image) => image.previewUrl !== item)
+    );
   };
 
   /**
@@ -167,23 +113,14 @@ const New: React.FunctionComponent = () => {
    * @param e
    */
   const maxImages = (e: React.MouseEvent<HTMLInputElement>) => {
-    if (carImages.length >= 10) {
+    if (listImages.length >= 10) {
       e.preventDefault();
       toast.info("Você só pode adicionar até 10 imagens.");
     }
   };
 
-  const handleUf = (e: any) => {
-    setValue("uf", e.target.value);
-    setValue("city", "");
-  };
-
-  const handleCity = (e: any) => {
-    setValue("city", e.target.value);
-  };
-
   const handleTransmission = (e: any) => {
-    setValue("transmission", e.targer.value);
+    setValue("transmission", e.target.value);
   };
 
   const handleFuel = (e: any) => {
@@ -206,9 +143,9 @@ const New: React.FunctionComponent = () => {
             />
           </ButtonFile>
 
-          {carImages.map((item) => (
-            <DivX key={item.name}>
-              <IconX onClick={() => handleDeleteImage(item)} />
+          {listImages.map((item) => (
+            <DivX key={item.previewUrl}>
+              <IconX onClick={() => handleDeleteImage(item.previewUrl)} />
               <ImageCar src={item.previewUrl} alt="Imagem do veículo" />
             </DivX>
           ))}
@@ -337,59 +274,7 @@ const New: React.FunctionComponent = () => {
           <Spacer spacing={6} />
 
           <TitleForm>Contato</TitleForm>
-          <ContainerInput>
-            <ContainerSelect>
-              <Label>Estado</Label>
-              <Select
-                {...register("uf")}
-                onChange={handleUf}
-                style={{
-                  color: uf === "" ? "gray" : "black",
-                  border: errors.uf && "2px solid #ff3030",
-                }}
-              >
-                <Option disabled value={""} style={{ color: "gray" }}>
-                  Estado
-                </Option>
-                {ufList.map((item, index) => (
-                  <Option key={index} value={item.sigla}>
-                    {item.nome}
-                  </Option>
-                ))}
-              </Select>
-            </ContainerSelect>
-
-            <ContainerSelect>
-              <Label>Cidade</Label>
-              <Select
-                {...register("city")}
-                onChange={handleCity}
-                style={{
-                  color: city === "" ? "gray" : "black",
-                  border: errors.city && "2px solid #ff3030",
-                }}
-              >
-                <Option disabled value={""} style={{ color: "grey" }}>
-                  Cidade
-                </Option>
-                {cityList.map((item, index) => (
-                  <Option key={index} value={item.nome}>
-                    {item.nome}
-                  </Option>
-                ))}
-              </Select>
-            </ContainerSelect>
-
-            <InputForm
-              errors={errors.whatsapp}
-              {...register("whatsapp")}
-              label="Telefone / Whatsapp"
-              placeholder="Somente DDD e números"
-              id="whatsapp"
-              type="tel"
-              maxLength={11}
-            />
-          </ContainerInput>
+          <ContainerContactUser />
 
           <Spacer spacing={6} />
 

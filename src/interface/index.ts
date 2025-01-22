@@ -44,13 +44,7 @@ export interface IFormNewCar {
   created: string;
   owner: string;
   uidUser: string;
-  images: carListImages[];
-}
-
-interface carListImages {
-  uid: string;
-  name: string;
-  url: string;
+  images: CarImages[];
 }
 
 export interface ICarList {

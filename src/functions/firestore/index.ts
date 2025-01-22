@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { IFormNewCar, IImageItemProps, IUser } from "../../interface";
+import { IFormNewCar, IUser } from "../../interface";
 import axiosService from "../../services/api";
 
 /**
@@ -13,63 +13,67 @@ import axiosService from "../../services/api";
  * @returns
  */
 export const createDocCarFirestore = async (
+  listImages: {
+    previewUrl: string;
+    file: File;
+  }[],
   data: IFormNewCar,
-  carImages: IImageItemProps[],
   setLoadingButton: (value: React.SetStateAction<boolean>) => void,
   user: IUser | null,
   reset: (values?: IFormNewCar) => void,
-  setCarImages: React.Dispatch<React.SetStateAction<IImageItemProps[]>>
+  setListImages: React.Dispatch<
+    React.SetStateAction<
+      {
+        previewUrl: string;
+        file: File;
+      }[]
+    >
+  >
 ) => {
-  if (carImages.length == 0) {
+  if (listImages.length == 0) {
     alert("Anexe pelo menos uma imagem.");
     return;
   }
 
   setLoadingButton(true);
 
-  const carListImages = carImages.map((car) => {
-    return {
-      uid: car.uid,
-      name: car.name,
-      url: car.url,
-    };
+  const formData = new FormData();
+  formData.append("name", data.name);
+  formData.append("model", data.model);
+  formData.append("whatsapp", user?.whatsapp as string);
+  formData.append("city", user?.city as string);
+  formData.append("uf", user?.uf as string);
+  formData.append("year", data.year);
+  formData.append("km", data.km);
+  formData.append("price", data.price);
+  formData.append("description", data.description);
+  formData.append("created", new Date().toLocaleDateString());
+  formData.append("owner", user?.name || "");
+  formData.append("uidUser", user?.uid || "");
+  formData.append("documentationStatus", data.documentationStatus);
+  formData.append("engine", data.engine);
+  formData.append("fuel", data.fuel);
+  formData.append("generalCondition", data.generalCondition);
+  formData.append("maintenanceHistory", data.maintenanceHistory);
+  formData.append("transmission", data.transmission);
+
+  listImages.forEach(({ file }) => {
+    formData.append("images", file);
   });
 
-  let dataUser: IFormNewCar = {
-    name: data.name,
-    model: data.model,
-    whatsapp: data.whatsapp,
-    city: data.city,
-    uf: data.uf,
-    year: data.year,
-    km: data.km,
-    price: data.price,
-    description: data.description,
-    created: new Date().toLocaleDateString(),
-    images: carListImages,
-    owner: user?.name as string,
-    uidUser: user?.uid as string,
-    documentationStatus: data.documentationStatus,
-    engine: data.engine,
-    fuel: data.fuel,
-    generalCondition: data.generalCondition,
-    maintenanceHistory: data.maintenanceHistory,
-    transmission: data.transmission,
-  };
-
   await axiosService
-    .post("/firestore/registerCar", dataUser)
-    .then(() => {
+    .post("/storage/registerAd", formData)
+    .then(async ({ data }) => {
       toast.success("Veículo cadastrado para venda com sucesso!");
+      console.log(await data);
       reset();
-      setCarImages([]);
+      setListImages([]);
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error(error.message);
       toast.error("Erro ao cadastrar veículo para venda.");
     })
-    .finally(() => {
-      setLoadingButton(false);
-    });
+    .finally(() => setLoadingButton(false));
 };
 
 /**

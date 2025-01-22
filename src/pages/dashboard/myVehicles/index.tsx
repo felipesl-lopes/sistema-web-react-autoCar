@@ -34,6 +34,7 @@ export const MyVehicles: React.FunctionComponent = () => {
                 city: doc.city,
                 km: doc.km,
                 images: doc.images,
+                uf: doc.uf
               });
             }
           });

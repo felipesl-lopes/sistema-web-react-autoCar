@@ -91,7 +91,7 @@ const CarDetails: React.FunctionComponent = () => {
   }, [car?.images.length]);
 
   const whatsappLink = (car: ICar) => {
-    if (!car?.whatsapp || !car?.name) return "#"; // Retorna um link vazio se dados estiverem ausentes
+    if (!car?.whatsapp || !car?.name) return "#";
     const num = car?.whatsapp.replace(/\D/g, "");
     const baseURL = "https://wa.me/55";
     const message = `Olá, vi esse ${car.name} ${car.model} no site AutoCar e fiquei com interesse!`;
@@ -124,13 +124,12 @@ const CarDetails: React.FunctionComponent = () => {
     );
 
     if (confirm) {
+      let data = { imgList: car?.images };
       await axiosService
-        .delete(`/firestore/deleteAd/${id}`)
-        .then(async () => {
-          navigate("/dashboard");
-          await axiosService
-            .delete(`/storage/deleteImgAd`, { data: car?.images })
-            .then(() => toast.success("Anúncio deletado com sucesso!"));
+        .delete(`/firestore/deleteAd/${id}`, { data })
+        .then(() => {
+          toast.success("Anúncio deletado com sucesso!");
+          navigate("/dashboard/meus-veiculos");
         })
         .catch(() => toast.error("Erro ao tentar deletar o anúncio."));
     }
@@ -147,9 +146,9 @@ const CarDetails: React.FunctionComponent = () => {
         pagination={{ clickable: true }}
         navigation
       >
-        {car?.images.map((images) => (
-          <SwiperSlide key={images.name}>
-            <SliderCar src={images.url} />
+        {car?.images.map((image) => (
+          <SwiperSlide key={image.name}>
+            <SliderCar src={image.url} />
           </SwiperSlide>
         ))}
       </Swiper>
