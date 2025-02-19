@@ -6,7 +6,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import Sliders_Home from "./sliders-home";
-import { ButtonSearch, ContainerSearch, InputSearch, Title } from "./styled";
+import { ButtonSearch, ContainerHome, ContainerSearch, InputSearch, Title } from "./styled";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
@@ -39,7 +39,8 @@ const Home: React.FunctionComponent = () => {
   }, [user]);
 
   return (
-    <ContainerComponent>
+    <ContainerHome>
+   
       <div>
         <Sliders_Home />
 
@@ -50,6 +51,8 @@ const Home: React.FunctionComponent = () => {
           <ButtonSearch>Pesquisar</ButtonSearch>
         </ContainerSearch>
       </div>
+
+      <ContainerComponent>
 
       <Spacer spacing={5} />
 
@@ -64,6 +67,7 @@ const Home: React.FunctionComponent = () => {
 
       <Spacer spacing={6} />
     </ContainerComponent>
+    </ContainerHome>
   );
 };
 

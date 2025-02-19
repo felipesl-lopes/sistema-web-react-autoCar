@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const ContainerHome = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+`;
+
 export const ContainerSearch = styled.section`
   width: 90%;
   display: flex;
@@ -43,5 +49,5 @@ export const ButtonSearch = styled.button`
 
 export const Title = styled.h1`
   text-align: center;
-  font-size: 24px;
+  font-size: clamp(1.2rem, 4vw, 2.5rem);
 `;

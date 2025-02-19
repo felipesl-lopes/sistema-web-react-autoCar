@@ -31,6 +31,7 @@ import {
   TextArea,
   TitleForm,
 } from "./styled";
+import { TitleDashboard } from "../styled";
 
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton } = useContext(AuthContext);
@@ -130,6 +131,8 @@ const New: React.FunctionComponent = () => {
   return (
     <ContainerComponent>
       <Spacer spacing={6} />
+
+      <TitleDashboard>Cadastre seu veículo</TitleDashboard>
 
       <Div>
         <DivImage>

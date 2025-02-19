@@ -40,6 +40,9 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  background-color: whitesmoke;
+  padding: 8px;
+  border-radius: 4px;
 `;
 
 const ContainerContact = styled.div`
@@ -52,6 +55,13 @@ const ContainerContact = styled.div`
 
   div {
     text-align: center;
+    width: 30%;
+
+    @media (max-width: 500px) {
+      width: 100%;
+      flex-wrap: nowrap;
+      margin-bottom: 8px;
+    }
   }
 `;
 

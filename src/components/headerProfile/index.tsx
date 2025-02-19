@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiCheckCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -19,17 +19,29 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
               <Image src={user.urlPhoto} />
             )}
           </ComponentImage>
-          <DivUser style={{ width: "360px" }}>
+
+          <DivUser>
             <Name>{user?.name}</Name>
             <div style={{ margin: "8px 0" }}>
               <InfoUser>
-                {user?.email}
-                {""}
-                <strong>
-                  {" "}
-                  {emailVerified ? "(verificado)" : "(não verificado)"}
-                </strong>
+                <p>{user?.email}</p>
+                {emailVerified ? (
+                  <FiCheckCircle color="green" />
+                ) : (
+                  <FiCheckCircle color="red" />
+                )}
               </InfoUser>
+
+              {!!user?.whatsapp ? (
+                <InfoUser>
+                  {`(${user.whatsapp.slice(0, 2)}) ${user.whatsapp.slice(
+                    2,
+                    7
+                  )}-${user.whatsapp.slice(7, 12)}`}{" "}
+                </InfoUser>
+              ) : (
+                <strong>Adicione seu telefone</strong>
+              )}
 
               {!!user?.city ? (
                 <InfoUser>
@@ -38,24 +50,12 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
               ) : (
                 <strong>Adicione seu endereço</strong>
               )}
-
-              {!!user?.whatsapp ? (
-                <InfoUser>
-                  {`(${user.whatsapp.slice(0, 2)}) ${user.whatsapp.slice(
-                    2,
-                    7
-                  )}-${user.whatsapp.slice(7, 12)}`} <strong>(não verificado)</strong>
-                </InfoUser>
-              ) : (
-                <strong>Adicione seu telefone</strong>
-              )}
             </div>
 
             <ButtonEditInfo onClick={() => navigate("/dashboard")}>
               Editar informações
             </ButtonEditInfo>
           </DivUser>
-          <Line />
         </DivSection>
 
         <DivSection>
@@ -90,32 +90,50 @@ const Header = styled.header`
   max-width: 1200px;
   margin: auto;
   width: 100%;
+  justify-content: space-between;
 
-  @media (max-width: 924px) {
-    /* flex-direction: column; */
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
+`;
+
+const DivSection = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  &:first-of-type {
+    margin-bottom: 20px;
+
+    @media (max-width: 320px) {
+      flex-direction: column;
+      /* align-items: center; */
+    }
   }
 `;
 
 const ComponentImage = styled.div`
   background-color: #fff;
   border-radius: 100px;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   align-items: center;
   justify-content: center;
   display: flex;
-  margin-right: 20px;
 
   svg {
     display: flex;
+  }
+
+  @media (max-width: 320px) {
+    margin: 0 0 10px 16px;
   }
 `;
 
 const Image = styled.img`
   object-fit: cover;
   border-radius: 100px;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
 `;
 
 const DivUser = styled.div`
@@ -124,10 +142,18 @@ const DivUser = styled.div`
   flex-direction: column;
 `;
 
-const Name = styled.h2``;
+const Name = styled.h2`
+  font-size: 1.4rem;
+`;
 
-const InfoUser = styled.p`
+const InfoUser = styled.div`
   margin-bottom: 4px;
+  align-items: center;
+  display: flex;
+
+  svg {
+    margin-left: 4px;
+  }
 
   strong {
     color: gray;
@@ -139,22 +165,6 @@ const ButtonEditInfo = styled.strong`
   cursor: pointer;
   font-size: 14px;
   color: #3485ff;
-`;
-
-const Line = styled.div`
-  height: 100px;
-  width: 2px;
-  background-color: #444;
-  margin: 0 20px;
-
-  @media (max-width: 924px) {
-    /* display: none; */
-  }
-`;
-
-const DivSection = styled.div`
-  display: flex;
-  flex-direction: row;
 `;
 
 const TitleSection = styled.h3`

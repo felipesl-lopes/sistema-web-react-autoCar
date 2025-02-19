@@ -7,6 +7,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { ICarList } from "../../../interface";
 import axiosService from "../../../services/api";
 import { Title } from "./styled";
+import { TitleDashboard } from "../styled";
 
 export const MyVehicles: React.FunctionComponent = () => {
   const { emailVerified, user } = useContext(AuthContext);
@@ -50,7 +51,7 @@ export const MyVehicles: React.FunctionComponent = () => {
 
   return (
     <ContainerComponent>
-      <Title>Meus veículos a venda:</Title>
+      <TitleDashboard>Meus anúncios</TitleDashboard>
 
       <CarList
         carList={carList}

@@ -12,10 +12,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import GlobalStyle from "./globalStyles/createGlobalStyle";
 
 const App: React.FunctionComponent = () => {
   return (
     <AuthProvider>
+      <GlobalStyle/>
       <RouterProvider router={router} />
       <ToastContainer autoClose={3000} />
     </AuthProvider>
