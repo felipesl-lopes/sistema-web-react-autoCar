@@ -49,5 +49,5 @@ export const ButtonSearch = styled.button`
 
 export const Title = styled.h1`
   text-align: center;
-  font-size: clamp(1.2rem, 4vw, 2.5rem);
+  font-size: clamp(1rem, 4vw, 2rem);
 `;

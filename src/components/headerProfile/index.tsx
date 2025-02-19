@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FiUser, FiCheckCircle } from "react-icons/fi";
+import { FiCheckCircle, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -106,7 +106,6 @@ const DivSection = styled.div`
 
     @media (max-width: 320px) {
       flex-direction: column;
-      /* align-items: center; */
     }
   }
 `;

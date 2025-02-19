@@ -188,8 +188,10 @@ const Form = styled.form`
 
 const ContainerSelect = styled.div`
   width: 100%;
-  padding-bottom: 18px;
-  margin-bottom: 4px;
+
+  &:first-of-type {
+    margin-bottom: 16px;
+  }
 `;
 
 const Select = styled.select`

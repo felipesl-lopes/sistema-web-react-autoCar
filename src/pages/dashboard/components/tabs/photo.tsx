@@ -108,7 +108,7 @@ export const Photo: React.FunctionComponent = () => {
         ) : (
           <ContainerButtons>
             <ButtonImg>
-              <FiImage /> Trocar foto
+              <FiImage /> <p>Trocar foto</p>
               <InputFile
                 type="file"
                 accept="image/*"
@@ -117,7 +117,7 @@ export const Photo: React.FunctionComponent = () => {
             </ButtonImg>
 
             <ButtonImg onClick={handleDeleteImage}>
-              <FiTrash /> Excluir foto
+              <FiTrash /> <p>Excluir foto</p>
             </ButtonImg>
           </ContainerButtons>
         )}
@@ -135,6 +135,10 @@ const Form = styled.form`
   flex: 1;
   justify-content: space-between;
   flex-direction: column;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
 `;
 
 const ComponentImage = styled.div`
@@ -158,6 +162,17 @@ const ContainerButtons = styled.div`
   justify-content: space-evenly;
   width: 70%;
   margin: auto;
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+    align-items: center;
+
+    button {
+      &:first-of-type {
+        margin-bottom: 16px;
+      }
+    }
+  }
 `;
 
 const ButtonImg = styled.button`
