@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,7 +10,11 @@ import axiosService from "../../services/api";
 
 const HeaderComponent: React.FunctionComponent = () => {
   const { signed, setUser } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const navigate = useNavigate();
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = async () => {
     const confirm = window.confirm("Você deseja realmente sair?");
@@ -29,38 +33,64 @@ const HeaderComponent: React.FunctionComponent = () => {
   };
 
   return (
-    <Container>
+    <Container isOpen={menuOpen}>
       <Header>
-        <Link to={"/"}>
-          <Logo src={logo} alt="Logo do site" />
-        </Link>
+        <div>
+          <Link to={"/"}>
+            <Logo src={logo} alt="Logo do site" />
+          </Link>
 
-        <MenuNav>
-          <TextButtonLink to={"/"}>Início</TextButtonLink>
+          <Menu onClick={toggleMenu} />
+        </div>
+
+        <MenuNav isOpen={menuOpen}>
+          <TextButtonLink to={"/"} onClick={() => setMenuOpen(false)}>
+            Início
+          </TextButtonLink>
 
           {signed && (
-            <TextButtonLink to={"/dashboard"}>Meus interesses</TextButtonLink>
+            <TextButtonLink
+              to={"/dashboard"}
+              onClick={() => setMenuOpen(false)}
+            >
+              Meus interesses
+            </TextButtonLink>
           )}
 
           {signed && (
-            <TextButtonLink to={"/dashboard/new"}>Vender</TextButtonLink>
+            <TextButtonLink
+              to={"/dashboard/new"}
+              onClick={() => setMenuOpen(false)}
+            >
+              Vender
+            </TextButtonLink>
           )}
 
           {signed && (
-            <TextButtonLink to={signed ? "/dashboard" : "/login"}>
+            <TextButtonLink
+              to={signed ? "/dashboard" : "/login"}
+              onClick={() => setMenuOpen(false)}
+            >
               Perfil
             </TextButtonLink>
           )}
 
           {signed ? (
-            <TextButtonLink onClick={handleLogout} to={"#"}>
+            <TextButtonLink
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false);
+              }}
+              to={"#"}
+            >
               Sair
             </TextButtonLink>
           ) : (
-            <TextButtonLink to={"/login"}>Entrar</TextButtonLink>
+            <TextButtonLink to={"/login"} onClick={() => setMenuOpen(false)}>
+              Entrar
+            </TextButtonLink>
           )}
         </MenuNav>
-        <Menu />
       </Header>
     </Container>
   );
@@ -68,10 +98,11 @@ const HeaderComponent: React.FunctionComponent = () => {
 
 export default HeaderComponent;
 
-const Container = styled.div`
+const Container = styled.div<{ isOpen: boolean }>`
   background-color: #0f081e;
   padding: 6px 12px;
-  height: 56px;
+  transition: height 0.3s ease;
+  height: ${({ isOpen }) => (isOpen ? "auto" : "56px")};
 `;
 
 const Header = styled.header`
@@ -81,6 +112,17 @@ const Header = styled.header`
   max-width: 1200px;
   margin: auto;
   height: 100%;
+
+  @media (max-width: 380px) {
+    flex-direction: column;
+
+    div {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
 `;
 
 const Logo = styled.img`
@@ -90,12 +132,15 @@ const Logo = styled.img`
   object-fit: contain;
 `;
 
-const MenuNav = styled.nav`
+const MenuNav = styled.nav<{ isOpen: boolean }>`
   display: flex;
   align-items: center;
 
-  @media (max-width: 450px) {
-    display: none;
+  @media (max-width: 380px) {
+    flex-direction: column;
+    display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+    width: 100%;
+    margin-top: 10px;
   }
 `;
 
@@ -103,8 +148,7 @@ const TextButtonLink = styled(Link)`
   text-decoration: none;
   color: #fff;
   font-size: 0.8em;
-  margin-left: 20px;
-  transition: 0.5s;
+  margin-left: 12px;
 
   &:hover {
     color: #fef49c;
@@ -113,14 +157,19 @@ const TextButtonLink = styled(Link)`
   &:active {
     color: #b07223;
   }
+
+  @media (max-width: 380px) {
+    padding-bottom: 8px;
+  }
 `;
 
 const Menu = styled(FiMenu)`
   display: none;
   color: white;
   font-size: 20px;
+  cursor: pointer;
 
-  @media (max-width: 450px) {
+  @media (max-width: 380px) {
     display: flex;
   }
 `;

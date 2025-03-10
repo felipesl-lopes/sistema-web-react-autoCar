@@ -124,7 +124,8 @@ const ComponentImage = styled.div`
   }
 
   @media (max-width: 320px) {
-    margin: 0 0 10px 16px;
+    /* margin: 0 0 10px 16px; */
+    display: none;
   }
 `;
 

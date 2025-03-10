@@ -143,9 +143,13 @@ const Form = styled.form`
 
 const ComponentImage = styled.div`
   background-color: #fff;
-  border-radius: 100px;
-  width: 200px;
-  height: 200px;
+  border-radius: 50%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 200px;
+  max-height: 200px;
+  min-height: 100px;
+  min-width: 100px;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -153,6 +157,8 @@ const ComponentImage = styled.div`
 
   svg {
     display: flex;
+    width: 60%;
+    height: 60%;
   }
 `;
 
@@ -200,9 +206,13 @@ const ButtonImg = styled.button`
 
 const Image = styled.img`
   object-fit: cover;
-  border-radius: 100px;
-  width: 200px;
-  height: 200px;
+  border-radius: 50%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 200px;
+  max-height: 200px;
+  min-height: 100px;
+  min-width: 100px;
 `;
 
 const InputFile = styled.input`
