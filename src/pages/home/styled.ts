@@ -45,9 +45,17 @@ export const ButtonSearch = styled.button`
     width: 100%;
     margin: auto;
   }
+
+  &:hover {
+    background-color: rgb(30, 120, 255);
+  }
 `;
 
 export const Title = styled.h1`
   text-align: center;
-  font-size: clamp(1rem, 4vw, 2rem);
+  font-size: clamp(1rem, 4vw, 1.3rem);
+`;
+
+export const TextResult = styled.p`
+  text-align: center;
 `;

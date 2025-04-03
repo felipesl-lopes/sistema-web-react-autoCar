@@ -6,15 +6,67 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import Sliders_Home from "./sliders-home";
-import { ButtonSearch, ContainerHome, ContainerSearch, InputSearch, Title } from "./styled";
+import {
+  ButtonSearch,
+  ContainerHome,
+  ContainerSearch,
+  InputSearch,
+  TextResult,
+  Title,
+} from "./styled";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
   const { user } = useContext(AuthContext);
+  const [inputCar, setInputCar] = useState("");
+  const [oldInputCar, setOldInputCar] = useState("");
 
   useEffect(() => {
-    (async () => {
-      await axiosService.get("/firestore/carList").then(({ data }) => {
+    loadCarList();
+  }, []);
+
+  const loadCarList = async () => {
+    await axiosService.get("/firestore/carList").then(({ data }) => {
+      let list = [] as ICarList[];
+      setCarList([]);
+      data.forEach((doc: ICarList) => {
+        if (user?.uid !== doc.uidUser) {
+          list.push({
+            uidUser: doc.uidUser,
+            id: doc.id,
+            name: doc.name,
+            year: doc.year,
+            price: doc.price,
+            city: doc.city,
+            uf: doc.uf,
+            km: doc.km,
+            images: doc.images,
+            model: doc.model,
+          });
+        }
+      });
+      setCarList(list);
+    });
+  };
+
+  const searchCarList = async () => {
+    setOldInputCar(inputCar);
+
+    if (oldInputCar == inputCar) {
+      return;
+    }
+
+    if (inputCar == "") {
+      await loadCarList();
+      console.log("Clicou");
+      return;
+    }
+
+    setCarList([]);
+
+    await axiosService
+      .get("/firestore/searchCar", { params: { inputCar } })
+      .then(({ data }) => {
         let list = [] as ICarList[];
         setCarList([]);
         data.forEach((doc: ICarList) => {
@@ -35,38 +87,47 @@ const Home: React.FunctionComponent = () => {
         });
         setCarList(list);
       });
-    })();
-  }, [user]);
+  };
 
   return (
     <ContainerHome>
-   
       <div>
         <Sliders_Home />
 
         <Spacer spacing={6} />
 
+        <Title>Carros novos e usados em todo o Brasil</Title>
+
+        <Spacer spacing={4} />
+
         <ContainerSearch>
-          <InputSearch placeholder="Escreva a marca ou modelo do carro" />
-          <ButtonSearch>Pesquisar</ButtonSearch>
+          <InputSearch
+            placeholder="Escreva a marca ou modelo do carro"
+            value={inputCar}
+            onChange={(e) => setInputCar(e.target.value)}
+          />
+          <ButtonSearch onClick={searchCarList}>Pesquisar</ButtonSearch>
         </ContainerSearch>
       </div>
 
-      <ContainerComponent>
-
-      <Spacer spacing={5} />
-
-      <Title>Carros novos e usados em todo o Brasil</Title>
-
       <Spacer spacing={4} />
 
-      <CarList
-        carList={carList}
-        messageListEmpty="Nenhum veículo para venda foi encontrado."
-      />
+      <TextResult>
+        {oldInputCar
+          ? `Exibindo resultado de pesquisa para: ${oldInputCar}`
+          : `Todos os resultados:`}
+      </TextResult>
 
-      <Spacer spacing={6} />
-    </ContainerComponent>
+      <Spacer spacing={10} />
+
+      <ContainerComponent>
+        <CarList
+          carList={carList}
+          messageListEmpty="Nenhum veículo para venda foi encontrado."
+        />
+
+        <Spacer spacing={6} />
+      </ContainerComponent>
     </ContainerHome>
   );
 };
