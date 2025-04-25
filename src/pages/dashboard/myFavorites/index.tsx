@@ -8,7 +8,7 @@ import { ICarList } from "../../../interface";
 import axiosService from "../../../services/api";
 import { TitleDashboard } from "../styled";
 
-export const MyVehicles: React.FunctionComponent = () => {
+export const MyFavorites: React.FunctionComponent = () => {
   const { emailVerified, user } = useContext(AuthContext);
   const [carList, setCarList] = useState<ICarList[]>([]);
 
@@ -18,25 +18,24 @@ export const MyVehicles: React.FunctionComponent = () => {
 
   useEffect(() => {
     (async () => {
+      const uidUser = user?.uid;
       await axiosService
-        .get("/firestore/carList")
+        .get("/firestore/carList/favorites", { params: { uidUser } })
         .then(({ data }) => {
           let list = [] as ICarList[];
           setCarList([]);
           data.forEach((doc: ICarList) => {
-            if (user?.uid === doc.uidUser) {
-              list.push({
-                uidUser: doc.uidUser,
-                id: doc.id,
-                name: doc.name,
-                year: doc.year,
-                price: doc.price,
-                city: doc.city,
-                km: doc.km,
-                images: doc.images,
-                uf: doc.uf,
-              });
-            }
+            list.push({
+              uidUser: doc.uidUser,
+              id: doc.id,
+              name: doc.name,
+              year: doc.year,
+              price: doc.price,
+              city: doc.city,
+              km: doc.km,
+              images: doc.images,
+              uf: doc.uf,
+            });
           });
           setCarList(list);
         })
@@ -49,11 +48,11 @@ export const MyVehicles: React.FunctionComponent = () => {
 
   return (
     <ContainerComponent>
-      <TitleDashboard>Meus anúncios</TitleDashboard>
+      <TitleDashboard>Meus favoritos</TitleDashboard>
 
       <CarList
         carList={carList}
-        messageListEmpty="Você não possui nenhum veículo para venda."
+        messageListEmpty="Você não favoritou nenhum veículo."
       />
     </ContainerComponent>
   );

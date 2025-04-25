@@ -3,10 +3,15 @@ import { FiCheckCircle, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const HeaderProfileComponent: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const { user, emailVerified } = useContext(AuthContext);
+
+  const messageError = () => {
+    toast.error("Finalize seu cadastro para começar a vender.");
+  };
 
   return (
     <Container>
@@ -62,8 +67,12 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
           <DivUser>
             <TitleSection>Atividade</TitleSection>
             <LinkRoute to={"/dashboard/meus-veiculos"}>Meus anúncios</LinkRoute>
-            <LinkRoute to={"#"}>Meus favoritos</LinkRoute>
-            <LinkRoute to={"/dashboard/new"}>Vender</LinkRoute>
+            <LinkRoute to={"/dashboard/meus-favoritos"}>Meus favoritos</LinkRoute>
+            {user?.city == "" || user?.whatsapp == "" ? (
+              <p onClick={messageError}>Vender</p>
+            ) : (
+              <LinkRoute to={"/dashboard/new"}>Vender</LinkRoute>
+            )}
           </DivUser>
 
           <DivUser>
@@ -124,7 +133,6 @@ const ComponentImage = styled.div`
   }
 
   @media (max-width: 320px) {
-    /* margin: 0 0 10px 16px; */
     display: none;
   }
 `;

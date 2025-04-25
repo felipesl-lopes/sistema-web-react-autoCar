@@ -58,7 +58,6 @@ const Home: React.FunctionComponent = () => {
 
     if (inputCar == "") {
       await loadCarList();
-      console.log("Clicou");
       return;
     }
 
@@ -100,17 +99,22 @@ const Home: React.FunctionComponent = () => {
 
         <Spacer spacing={4} />
 
-        <ContainerSearch>
+        <ContainerSearch
+          onClick={(e) => {
+            e.preventDefault();
+            searchCarList();
+          }}
+        >
           <InputSearch
             placeholder="Escreva a marca ou modelo do carro"
             value={inputCar}
             onChange={(e) => setInputCar(e.target.value)}
           />
-          <ButtonSearch onClick={searchCarList}>Pesquisar</ButtonSearch>
+          <ButtonSearch>Pesquisar</ButtonSearch>
         </ContainerSearch>
       </div>
 
-      <Spacer spacing={4} />
+      <Spacer spacing={10} />
 
       <TextResult>
         {oldInputCar

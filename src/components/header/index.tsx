@@ -50,10 +50,10 @@ const HeaderComponent: React.FunctionComponent = () => {
 
           {signed && (
             <TextButtonLink
-              to={"/dashboard"}
+              to={"/dashboard/meus-favoritos"}
               onClick={() => setMenuOpen(false)}
             >
-              Meus interesses
+              Meus favoritos
             </TextButtonLink>
           )}
 

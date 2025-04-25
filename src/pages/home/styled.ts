@@ -6,7 +6,7 @@ export const ContainerHome = styled.div`
   margin: auto;
 `;
 
-export const ContainerSearch = styled.section`
+export const ContainerSearch = styled.form`
   width: 90%;
   display: flex;
   background-color: #fff;

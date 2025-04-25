@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ContainerComponent } from "../../components/Container";
+import FavoriteCarComponent from "../../components/favoriteCarComponent";
 import { Spacer } from "../../components/spacer";
 import { SpinnerLoading } from "../../components/spinnerLoading";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -17,6 +18,7 @@ import {
   DivInfo,
   DivInfoBasic,
   DivInfoConditions,
+  FavoriteWrapper,
   Main,
   SliderCar,
   Text,
@@ -141,17 +143,21 @@ const CarDetails: React.FunctionComponent = () => {
       <Title>Detalhes do veículo</Title>
       <Spacer spacing={4} />
 
-      <Swiper
-        slidesPerView={Math.min(sliderPerview as number, 3)}
-        pagination={{ clickable: true }}
-        navigation
-      >
-        {car?.images.map((image) => (
-          <SwiperSlide key={image.name}>
-            <SliderCar src={image.url} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <FavoriteWrapper>
+        {!!user && user?.uid != car?.uidUser && <FavoriteCarComponent id={id} />}
+        <Swiper
+          slidesPerView={Math.min(sliderPerview as number, 3)}
+          pagination={{ clickable: true }}
+          navigation
+        >
+          {car?.images.map((image) => (
+            <SwiperSlide key={image.name}>
+              <SliderCar src={image.url} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </FavoriteWrapper>
+
       <Main>
         <DivInfo>
           <TextInfo>

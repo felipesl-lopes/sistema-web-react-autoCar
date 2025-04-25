@@ -10,6 +10,7 @@ import { MyVehicles } from "../pages/dashboard/myVehicles";
 import New from "../pages/dashboard/new";
 import Home from "../pages/home";
 import { Private } from "./Private";
+import { MyFavorites } from "../pages/dashboard/myFavorites";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,14 @@ const router = createBrowserRouter([
         element: (
           <Private>
             <MyVehicles />
+          </Private>
+        ),
+      },
+      {
+        path: "/dashboard/meus-favoritos",
+        element: (
+          <Private>
+            <MyFavorites />
           </Private>
         ),
       },
