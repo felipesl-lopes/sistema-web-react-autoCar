@@ -7,6 +7,19 @@ const ContainerContactUser: React.FunctionComponent = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  if (user?.city == "" || user?.uf == "" || user?.whatsapp == "") {
+    return (
+      <Container style={{ backgroundColor: "#ff0000", padding: 20 }}>
+        <Text
+          style={{ color: "#ffffff", fontSize: 14, cursor: "pointer" }}
+          onClick={() => navigate("/dashboard")}
+        >
+          Finalize seu cadastro para começar a vender.
+        </Text>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <ContainerContact>

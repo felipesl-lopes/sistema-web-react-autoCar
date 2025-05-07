@@ -32,9 +32,11 @@ import {
   TitleForm,
 } from "./styled";
 import { TitleDashboard } from "../styled";
+import { Navigate } from "react-router-dom";
+import ComponentVerifielEmail from "../../../components/componentVerifieldEmail";
 
 const New: React.FunctionComponent = () => {
-  const { user, setLoadingButton } = useContext(AuthContext);
+  const { user, setLoadingButton, emailVerified } = useContext(AuthContext);
   const transmissionList = ["Manual", "Automático", "Automatizado"];
   const fuelList = [
     "Gasolina",
@@ -77,6 +79,20 @@ const New: React.FunctionComponent = () => {
       city: "",
     },
   });
+
+  if (!emailVerified && !user?.uid) {
+    return <Navigate to={"/"} />;
+  }
+
+  if (!emailVerified && user?.uid) {
+    return (
+      <ComponentVerifielEmail
+        email={user.email}
+        title="Cadastre seu veículo"
+        text="Verifique seu e-mail para cadastrar seus veículos."
+      />
+    );
+  }
 
   const onSubmit = async (data: IFormNewCar) => {
     await createDocCarFirestore(
@@ -293,7 +309,11 @@ const New: React.FunctionComponent = () => {
 
           <Spacer spacing={6} />
 
-          <ButtonSendComponent title={"Anunciar"} type="submit" />
+          <ButtonSendComponent
+            disable={user?.city == "" || user?.whatsapp == ""}
+            title={"Anunciar"}
+            type="submit"
+          />
         </Form>
       </Div>
 

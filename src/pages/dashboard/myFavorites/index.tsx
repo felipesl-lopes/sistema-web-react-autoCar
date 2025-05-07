@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ComponentVerifielEmail from "../../../components/componentVerifieldEmail";
 import { ContainerComponent } from "../../../components/Container";
 import CarList from "../../../components/lists/carList";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -12,8 +13,18 @@ export const MyFavorites: React.FunctionComponent = () => {
   const { emailVerified, user } = useContext(AuthContext);
   const [carList, setCarList] = useState<ICarList[]>([]);
 
-  if (!emailVerified) {
+  if (!emailVerified && !user?.uid) {
     return <Navigate to={"/"} />;
+  }
+
+  if (!emailVerified && user?.uid) {
+    return (
+      <ComponentVerifielEmail
+        email={user.email}
+        title="Meus favoritos"
+        text="Verifique seu e-mail para adicionar seus favoritos."
+      />
+    );
   }
 
   useEffect(() => {

@@ -11,7 +11,7 @@ interface IProps {
 
 const FavoriteCarComponent: React.FunctionComponent<IProps> = ({ id }) => {
   const [favorite, setFavorite] = useState(false);
-  const { user } = useContext(AuthContext);
+  const { user, emailVerified } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +30,11 @@ const FavoriteCarComponent: React.FunctionComponent<IProps> = ({ id }) => {
   }, [user?.uid, id]);
 
   const handleFavorite = async () => {
+    if (!emailVerified) {
+      toast.error("Verifique seu e-mail para favoritar veículos.");
+      return;
+    }
+
     setFavorite(!favorite);
     const data = { uidUser: user?.uid, idCar: id };
     if (favorite /** Se estiver favorito, então desfavorite */) {
