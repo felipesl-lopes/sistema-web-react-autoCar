@@ -5,15 +5,19 @@ import { Spacer } from "../../components/spacer";
 import { AuthContext } from "../../contexts/AuthContext";
 import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
+import CarAdButtonComponent from "./CarAdButtonComponent";
+import QuickFilterComponent from "./QuickFilterComponent";
 import Sliders_Home from "./sliders-home";
 import {
   ButtonSearch,
   ContainerHome,
   ContainerSearch,
+  ContainerWrapper,
   InputSearch,
   TextResult,
   Title,
 } from "./styled";
+import WhyChooseUsComponent from "./WhyChooseUsComponent";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
@@ -90,11 +94,11 @@ const Home: React.FunctionComponent = () => {
 
   return (
     <ContainerHome>
-      <div>
-        <Sliders_Home />
+      <Sliders_Home />
 
-        <Spacer spacing={6} />
+      <Spacer spacing={6} />
 
+      <ContainerWrapper>
         <Title>Carros novos e usados em todo o Brasil</Title>
 
         <Spacer spacing={4} />
@@ -112,26 +116,40 @@ const Home: React.FunctionComponent = () => {
           />
           <ButtonSearch>Pesquisar</ButtonSearch>
         </ContainerSearch>
-      </div>
 
-      <Spacer spacing={10} />
+        <Spacer spacing={8} />
 
-      <TextResult>
-        {oldInputCar
-          ? `Exibindo resultado de pesquisa para: ${oldInputCar}`
-          : `Todos os resultados:`}
-      </TextResult>
+        <QuickFilterComponent />
 
-      <Spacer spacing={10} />
+        <Spacer spacing={10} />
 
-      <ContainerComponent>
-        <CarList
-          carList={carList}
-          messageListEmpty="Nenhum veículo para venda foi encontrado."
-        />
+        <TextResult>
+          {oldInputCar
+            ? `Exibindo resultado de pesquisa para: ${oldInputCar}`
+            : `Resultados:`}
+        </TextResult>
 
         <Spacer spacing={6} />
-      </ContainerComponent>
+
+        <ContainerComponent>
+          <CarList
+            carList={carList}
+            messageListEmpty="Nenhum veículo para venda foi encontrado."
+          />
+
+          <Spacer spacing={6} />
+        </ContainerComponent>
+      </ContainerWrapper>
+
+      <Spacer spacing={10} />
+
+      <CarAdButtonComponent />
+
+      <Spacer spacing={10} />
+
+      <WhyChooseUsComponent />
+
+      <Spacer spacing={20} />
     </ContainerHome>
   );
 };

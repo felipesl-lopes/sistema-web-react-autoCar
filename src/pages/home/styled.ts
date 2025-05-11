@@ -2,6 +2,12 @@ import styled from "styled-components";
 
 export const ContainerHome = styled.div`
   width: 100%;
+  /* max-width: 1200px; */
+  margin: auto;
+`;
+
+export const ContainerWrapper = styled.div`
+  width: 100%;
   max-width: 1200px;
   margin: auto;
 `;
@@ -10,10 +16,11 @@ export const ContainerSearch = styled.form`
   width: 90%;
   display: flex;
   background-color: #fff;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #fff;
   padding: 12px;
   margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 
   @media (max-width: 350px) {
     display: block;
@@ -25,6 +32,7 @@ export const InputSearch = styled.input`
   padding: 6px;
   border-radius: 4px;
   border: 1px solid #666;
+  font-size: 15px;
 
   @media (max-width: 350px) {
     width: 100%;
@@ -40,6 +48,7 @@ export const ButtonSearch = styled.button`
   border-radius: 4px;
   border: 0;
   cursor: pointer;
+  font-size: 16px;
 
   @media (max-width: 350px) {
     width: 100%;

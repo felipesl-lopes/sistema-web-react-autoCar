@@ -51,13 +51,17 @@ const CarList: React.FunctionComponent<IProps> = ({
                 />
 
                 <ContainerInfo>
-                  <NameCar>{car.name} {car.model}</NameCar>
+                  <NameCar>
+                    {car.name} {car.model}
+                  </NameCar>
                   <Description>
                     Ano {car.year} | {car.km} km
                   </Description>
                   <Price>R${car.price}</Price>
                   <Divider />
-                  <Locality>{car.city}, {car.uf}</Locality>
+                  <Locality>
+                    {car.city}, {car.uf}
+                  </Locality>
                 </ContainerInfo>
               </Section>
             </Link>
@@ -77,6 +81,7 @@ export const Main = styled.main`
   background-color: #fff;
   padding: 12px;
   border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 
   @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
@@ -92,11 +97,11 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  overflow: hidden
+  overflow: hidden;
 `;
 
 const ImgCar = styled.img`
-   width: 100%;
+  width: 100%;
   max-width: 100%;
   height: auto;
   border-top-right-radius: 4px;

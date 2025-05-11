@@ -2,15 +2,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
+import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
+import ComponentVerifielEmail from "../../../components/componentVerifieldEmail";
 import { ContainerComponent } from "../../../components/Container";
 import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { createDocCarFirestore } from "../../../functions/firestore";
 import { IFormNewCar } from "../../../interface";
+import { TitleDashboard } from "../styled";
 import ContainerContactUser from "./components/containerContactUser";
 import {
   ButtonFile,
@@ -31,9 +34,6 @@ import {
   TextArea,
   TitleForm,
 } from "./styled";
-import { TitleDashboard } from "../styled";
-import { Navigate } from "react-router-dom";
-import ComponentVerifielEmail from "../../../components/componentVerifieldEmail";
 
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton, emailVerified } = useContext(AuthContext);
@@ -88,7 +88,7 @@ const New: React.FunctionComponent = () => {
     return (
       <ComponentVerifielEmail
         email={user.email}
-        title="Cadastre seu veículo"
+        title="Anuncie seu veículo"
         text="Verifique seu e-mail para cadastrar seus veículos."
       />
     );
