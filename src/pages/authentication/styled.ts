@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import theme from "../../styles/theme";
 
 export const Container = styled.div``;
 
 export const Body = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: ${theme.padding.p20};
   justify-content: center;
   margin-top: 10vh;
 
@@ -16,13 +17,12 @@ export const Body = styled.div`
   }
 `;
 
-export const Title = styled.h1`
-  margin-bottom: 12px;
+export const Title = styled.h2`
+  margin-bottom: ${theme.pixels.px12};
   text-align: center;
-  font-size: 1.7rem;
 
   @media (max-width: 450px) {
-    font-size: 24px;
+    font-size: ${theme.fontSize.fs24};
   }
 
   @media (max-width: 210px) {
@@ -31,13 +31,13 @@ export const Title = styled.h1`
 `;
 
 export const Authentication = styled.form`
-  padding: 16px;
+  padding: ${theme.padding.p16};
   width: 40%;
   align-items: center;
   display: flex;
   flex-direction: column;
   border: 2px solid #ccc;
-  border-radius: 8px;
+  border-radius: ${theme.borderRadius.radius8};
   max-width: 620px;
 
   @media (max-width: 800px) {
@@ -55,6 +55,6 @@ export const BoxRecoverPassword = styled.div`
 `;
 
 export const RecoverPassword = styled(Link)`
-  color: #3485ff;
-  font-size: 14px;
+  color: ${theme.colors.gray};
+  font-size: ${theme.fontSize.fs14};
 `;

@@ -144,7 +144,9 @@ const CarDetails: React.FunctionComponent = () => {
       <Spacer spacing={4} />
 
       <FavoriteWrapper>
-        {!!user && user?.uid != car?.uidUser && <FavoriteCarComponent id={id} />}
+        {!!user && user?.uid != car?.uidUser && (
+          <FavoriteCarComponent id={id} />
+        )}
         <Swiper
           slidesPerView={Math.min(sliderPerview as number, 3)}
           pagination={{ clickable: true }}
@@ -209,18 +211,18 @@ const CarDetails: React.FunctionComponent = () => {
 
         <DivInfoConditions>
           <div>
-            <Data>Estado geral:</Data>
-            <Text>{car?.generalCondition}</Text>
+            <Text>Estado geral:</Text>
+            <Data>{car?.generalCondition}</Data>
           </div>
 
           <div>
-            <Data>Revisões e Manutenções:</Data>
-            <Text>{car?.maintenanceHistory}</Text>
+            <Text>Revisões e Manutenções:</Text>{" "}
+            <Data>{car?.maintenanceHistory}</Data>
           </div>
 
           <div>
-            <Data>Documentação:</Data>
-            <Text>{car?.documentationStatus}</Text>
+            <Text>Documentação:</Text>
+            <Data>{car?.documentationStatus}</Data>
           </div>
         </DivInfoConditions>
 

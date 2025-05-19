@@ -1,16 +1,25 @@
 import React, { useContext, useState } from "react";
 import { FiMenu } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import logo from "../../assets/logo-autocar.png";
 import { AuthContext } from "../../contexts/AuthContext";
 import { getErrorMessage } from "../../errors/authErrors";
 import axiosService from "../../services/api";
+import theme from "../../styles/theme";
 
 const HeaderComponent: React.FunctionComponent = () => {
   const { signed, setUser } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const authPaths = [
+    "/login",
+    "/register",
+    "/recoverPassword",
+    "/verificar-email",
+  ];
+  const isAuth = authPaths.includes(location.pathname);
 
   const navigate = useNavigate();
 
@@ -43,7 +52,10 @@ const HeaderComponent: React.FunctionComponent = () => {
           <Menu onClick={toggleMenu} />
         </div>
 
-        <MenuNav isOpen={menuOpen}>
+        <MenuNav
+          isOpen={menuOpen}
+          style={{ display: isAuth ? "none" : "flex" }}
+        >
           <TextButtonLink to={"/"} onClick={() => setMenuOpen(false)}>
             Início
           </TextButtonLink>
@@ -99,8 +111,8 @@ const HeaderComponent: React.FunctionComponent = () => {
 export default HeaderComponent;
 
 const Container = styled.div<{ isOpen: boolean }>`
-  background-color: #0f081e;
-  padding: 6px 12px;
+  background-color: ${theme.colors.darkBlue};
+  padding: ${theme.padding.p8} ${theme.padding.p12};
   transition: height 0.3s ease;
   height: ${({ isOpen }) => (isOpen ? "auto" : "56px")};
 `;
@@ -140,33 +152,33 @@ const MenuNav = styled.nav<{ isOpen: boolean }>`
     flex-direction: column;
     display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
     width: 100%;
-    margin-top: 10px;
+    margin-top: ${theme.pixels.px12};
   }
 `;
 
 const TextButtonLink = styled(Link)`
   text-decoration: none;
-  color: #fff;
+  color: ${theme.colors.white};
   font-size: 0.8em;
-  margin-left: 12px;
+  margin-left: ${theme.pixels.px12};
 
   &:hover {
-    color: #fef49c;
+    color: ${theme.colors.textHover};
   }
 
   &:active {
-    color: #b07223;
+    color: ${theme.colors.buttonHover};
   }
 
   @media (max-width: 380px) {
-    padding-bottom: 8px;
+    padding-bottom: ${theme.pixels.px8};
   }
 `;
 
 const Menu = styled(FiMenu)`
   display: none;
-  color: white;
-  font-size: 20px;
+  color: ${theme.colors.white};
+  font-size: ${theme.fontSize.fs20};
   cursor: pointer;
 
   @media (max-width: 380px) {

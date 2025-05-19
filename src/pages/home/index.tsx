@@ -18,6 +18,8 @@ import {
   Title,
 } from "./styled";
 import WhyChooseUsComponent from "./WhyChooseUsComponent";
+import CarPurchaseTips from "./CarPurchaseTips";
+import InfoBarComponent from "./InfoBarComponent";
 
 const Home: React.FunctionComponent = () => {
   const [carList, setCarList] = useState<ICarList[]>([]);
@@ -117,10 +119,6 @@ const Home: React.FunctionComponent = () => {
           <ButtonSearch>Pesquisar</ButtonSearch>
         </ContainerSearch>
 
-        <Spacer spacing={8} />
-
-        <QuickFilterComponent />
-
         <Spacer spacing={10} />
 
         <TextResult>
@@ -149,7 +147,17 @@ const Home: React.FunctionComponent = () => {
 
       <WhyChooseUsComponent />
 
-      <Spacer spacing={20} />
+      <Spacer spacing={10} />
+
+      <QuickFilterComponent />
+
+      <Spacer spacing={10} />
+
+      <CarPurchaseTips />
+
+      <Spacer spacing={10} />
+
+      <InfoBarComponent />
     </ContainerHome>
   );
 };

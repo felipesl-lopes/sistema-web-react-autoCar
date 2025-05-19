@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import theme from "../../styles/theme";
 
 export const Main = styled.main`
   display: grid;
-  background-color: #fff;
-  padding: 12px;
-  border-radius: 4px;
+  background-color: ${theme.colors.white};
+  padding: ${theme.padding.p12};
+  border-radius: ${theme.borderRadius.radius4};
 `;
 
 export const SliderCar = styled.img`
@@ -15,7 +16,7 @@ export const SliderCar = styled.img`
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
+  font-size: ${theme.fontSize.fs24};
 `;
 
 export const FavoriteWrapper = styled.div`
@@ -26,16 +27,16 @@ export const DivInfo = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: ${theme.pixels.px12};
 `;
 
 export const TitleData = styled.strong`
-  color: #666;
-  margin-bottom: 12px;
+  color: ${theme.colors.black};
+  margin-bottom: ${theme.pixels.px12};
 `;
 
-export const TextInfo = styled.h3`
-  font-size: 22px;
+export const TextInfo = styled.h2`
+  color: ${theme.colors.black};
 `;
 
 export const DivInfoBasic = styled.div`
@@ -44,19 +45,19 @@ export const DivInfoBasic = styled.div`
 
   @media (max-width: 420px) {
     display: block;
-    grid-column: 10px;
+    grid-column: ${theme.pixels.px12};
   }
 `;
 
 export const DivInfoConditions = styled.div`
   div {
     display: flex;
-    margin-bottom: 4px;
-    margin-left: 4px;
+    margin-bottom: ${theme.pixels.px4};
+    margin-left: ${theme.pixels.px4};
 
     @media (max-width: 455px) {
       display: block;
-      grid-column: 10px;
+      grid-column: ${theme.pixels.px12};
 
       p {
         margin-left: 0;
@@ -65,7 +66,7 @@ export const DivInfoConditions = styled.div`
   }
 
   p {
-    margin-left: 4px;
+    margin-left: ${theme.pixels.px4};
   }
 `;
 
@@ -73,26 +74,28 @@ export const ContainerAlign = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 4px;
+  margin-left: ${theme.pixels.px4};
   flex-wrap: wrap;
-  margin-bottom: 4px;
+  margin-bottom: ${theme.pixels.px4};
 
   @media (max-width: 420px) {
     flex-direction: row;
-    margin-left: 4px;
+    margin-left: ${theme.pixels.px4};
 
     strong {
-      margin-left: 4px;
+      margin-left: ${theme.pixels.px4};
     }
   }
 `;
 
 export const Text = styled.p`
-  font-size: 14px;
+  font-size: ${theme.fontSize.fs14};
+  color: ${theme.colors.darkText};
 `;
 
 export const Data = styled.strong`
-  font-size: 14px;
+  font-size: ${theme.fontSize.fs14};
+  color: ${theme.colors.darkText};
 `;
 
 export const CallButton = styled.a`
@@ -100,8 +103,8 @@ export const CallButton = styled.a`
   align-items: center;
   justify-content: center;
   display: flex;
-  height: 38px;
-  border-radius: 4px;
+  height: ${theme.pixels.px40};
+  border-radius: ${theme.borderRadius.radius4};
   max-width: 600px;
   margin: 0 auto;
   width: 100%;
@@ -110,7 +113,7 @@ export const CallButton = styled.a`
   text-decoration: none;
 
   svg {
-    margin-left: 8px;
-    font-size: 20px;
+    margin-left: ${theme.pixels.px8};
+    font-size: ${theme.fontSize.fs20};
   }
 `;

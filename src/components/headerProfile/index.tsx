@@ -3,6 +3,7 @@ import { FiCheckCircle, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/AuthContext";
+import theme from "../../styles/theme";
 
 const HeaderProfileComponent: React.FunctionComponent = () => {
   const navigate = useNavigate();
@@ -83,8 +84,8 @@ const HeaderProfileComponent: React.FunctionComponent = () => {
 export default HeaderProfileComponent;
 
 const Container = styled.div`
-  background-color: #ddd;
-  padding: 20px 12px;
+  background-color: ${theme.colors.backgroundPrimary};
+  padding: ${theme.padding.p20} ${theme.padding.p12};
 `;
 
 const Header = styled.header`
@@ -104,7 +105,7 @@ const DivSection = styled.div`
   flex-direction: row;
 
   &:first-of-type {
-    margin-bottom: 20px;
+    margin-bottom: ${theme.padding.p20};
 
     @media (max-width: 320px) {
       flex-direction: column;
@@ -113,7 +114,7 @@ const DivSection = styled.div`
 `;
 
 const ComponentImage = styled.div`
-  background-color: #fff;
+  background-color: ${theme.colors.white};
   border-radius: 100px;
   width: 100px;
   height: 100px;
@@ -138,7 +139,7 @@ const Image = styled.img`
 `;
 
 const DivUser = styled.div`
-  margin: 0 16px;
+  margin: 0 ${theme.padding.p16};
   display: flex;
   flex-direction: column;
 `;
@@ -148,26 +149,27 @@ const Name = styled.h2`
 `;
 
 const InfoUser = styled.div`
-  margin-bottom: 4px;
+  margin-bottom: ${theme.pixels.px4};
   align-items: center;
   display: flex;
 
   svg {
-    margin-left: 4px;
+    margin-left: ${theme.pixels.px4};
   }
 `;
 
 const ButtonEditInfo = styled.strong`
   cursor: pointer;
-  font-size: 14px;
-  color: #3485ff;
+  font-size: ${theme.fontSize.fs14};
+  color: ${theme.colors.blue};
 `;
 
 const TitleSection = styled.h3`
-  margin: 4px 0 8px;
+  margin: ${theme.padding.p4} 0 ${theme.padding.p8};
+  font-size: ${theme.fontSize.fs16};
 `;
 
 const LinkRoute = styled(Link)`
   text-decoration: none;
-  margin-bottom: 4px;
+  margin-bottom: ${theme.pixels.px4};
 `;

@@ -7,7 +7,6 @@ import { z } from "zod";
 import { ButtonNavigateComponent } from "../../../components/buttonNavigateComponent";
 import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
-import HeaderAuth from "../../../components/headerAuth";
 import {
   InputComponent,
   InputPasswordComponent,
@@ -77,7 +76,6 @@ const Register: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
       <Spacer spacing={5} />
 
       <ContainerComponent>

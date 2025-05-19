@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/AuthContext";
 import axiosService from "../services/api";
+import theme from "../styles/theme";
 
 interface IProps {
   id: string | undefined;
@@ -60,13 +61,13 @@ export default FavoriteCarComponent;
 
 const Container = styled.div`
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: ${theme.pixels.px12};
+  left: ${theme.pixels.px12};
   z-index: 10;
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: ${theme.pixels.px8} ${theme.pixels.px12};
+  border-radius: ${theme.borderRadius.radius8};
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -75,16 +76,16 @@ const Container = styled.div`
 `;
 
 const IconFavorite = styled(IoMdHeart)`
-  font-size: 24px;
+  font-size: ${theme.fontSize.fs24};
   color: red;
 `;
 
 const IconUnfavorite = styled(IoMdHeartEmpty)`
-  font-size: 24px;
+  font-size: ${theme.fontSize.fs24};
   color: red;
 `;
 
 const Text = styled.p`
   color: white;
-  margin-left: 8px;
+  margin-left: ${theme.pixels.px4};
 `;

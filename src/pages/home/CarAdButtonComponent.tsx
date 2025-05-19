@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { ContainerComponent } from "../../components/Container";
 import { Spacer } from "../../components/spacer";
 import { AuthContext } from "../../contexts/AuthContext";
+import theme from "../../styles/theme";
 
 const CarAdButtonComponent: React.FunctionComponent = () => {
   const { user } = useContext(AuthContext);
@@ -38,38 +39,32 @@ const CarAdButtonComponent: React.FunctionComponent = () => {
 export default CarAdButtonComponent;
 
 const Container = styled.div`
-  background-color: #ff6600;
+  background-color: ${theme.colors.golden};
   padding: 40px 20px;
   text-align: center;
-  border-radius: 12px;
+  border-radius: ${theme.borderRadius.radius12};
   margin: 40px auto;
   max-width: 800px;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
-const Title = styled.h1`
-  margin: 10px 10px 30px 10px;
-  font-size: 28px;
-`;
+const Title = styled.h1``;
 
 const Text = styled.p`
-  margin: 10px;
+  margin: ${theme.pixels.px12};
   text-align: center;
 `;
 
 const Button = styled.button`
-  background-color: white;
-  color: #ff6600;
+  background-color: ${theme.colors.white};
+  color: ${theme.colors.golden};
   border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-size: 18px;
+  padding: ${theme.padding.p16} ${theme.padding.p28};
+  border-radius: ${theme.borderRadius.radius8};
+  font-size: ${theme.fontSize.fs18};
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-
-  &:hover {
-    background-color: #ffe2d0;
-  }
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import theme from "../styles/theme";
 
 export const PanelAuth: React.FunctionComponent = () => {
   return (
@@ -23,14 +24,14 @@ export const PanelAuth: React.FunctionComponent = () => {
 };
 
 const Panel = styled.div`
-  padding: 16px;
+  padding: ${theme.padding.p16};
   width: 40%;
   max-width: 620px;
 
   strong,
   li {
-    color: #888;
-    font-size: 15px;
+    color: ${theme.colors.gray};
+    font-size: ${theme.fontSize.fs14};
     list-style-type: none;
     font-weight: 500;
   }
@@ -41,12 +42,13 @@ const Panel = styled.div`
 `;
 
 const Title = styled.h1`
-  margin-bottom: 12px;
+  margin-bottom: ${theme.padding.p12};
   font-size: 1.6rem;
+  color: ${theme.colors.golden};
 `;
 
 const Subtitle = styled.p`
-  font-size: 15px;
-  color: #555;
-  margin-bottom: 40px;
+  font-size: ${theme.fontSize.fs16};
+  color: ${theme.colors.darkText};
+  margin-bottom: ${theme.pixels.px40};
 `;

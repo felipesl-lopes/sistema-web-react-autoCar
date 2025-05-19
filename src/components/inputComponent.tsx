@@ -2,6 +2,7 @@ import React, { forwardRef, useState } from "react";
 import { FieldError } from "react-hook-form";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import styled from "styled-components";
+import theme from "../styles/theme";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errors: FieldError | undefined;
@@ -11,7 +12,9 @@ export const InputComponent = forwardRef<HTMLInputElement, IProps>(
   ({ errors, ...otherProps }, ref) => {
     return (
       <Container>
-        <ContainerInput style={{ border: errors && "solid 2px #ff3030" }}>
+        <ContainerInput
+          style={{ border: errors && `solid 2px ${theme.colors.red}` }}
+        >
           <Input ref={ref} {...otherProps} />
         </ContainerInput>
         {errors && <TextError>{errors.message}</TextError>}
@@ -26,7 +29,9 @@ export const InputPasswordComponent = forwardRef<HTMLInputElement, IProps>(
 
     return (
       <Container>
-        <ContainerInput style={{ border: errors && "solid 2px #ff3030" }}>
+        <ContainerInput
+          style={{ border: errors && `solid 2px ${theme.colors.red}` }}
+        >
           <Input
             type={visible ? "text" : "password"}
             ref={ref}
@@ -47,10 +52,10 @@ const Container = styled.div`
 `;
 
 const ContainerInput = styled.div`
-  border: 2px solid #ccc;
-  border-radius: 4px;
+  border: 2px solid ${theme.colors.clearText};
+  border-radius: ${theme.borderRadius.radius4};
   width: 100%;
-  background-color: #fff;
+  background-color: ${theme.colors.white};
   display: flex;
   align-items: center;
 
@@ -67,32 +72,32 @@ const Input = styled.input`
   width: 100%;
   border: none;
   outline: none;
-  padding: 10px;
+  padding: ${theme.padding.p12};
   background-color: transparent;
   appearance: none;
   font-size: 0.9rem;
 
   &:-webkit-autofill {
     background-color: transparent !important;
-    border-radius: 4px;
+    border-radius: ${theme.borderRadius.radius4};
     -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   }
 `;
 
 const IconEye = styled.div`
   cursor: pointer;
-  padding: 0 12px;
+  padding: 0 ${theme.padding.p12};
 
   svg {
     display: flex;
     bottom: auto;
-    color: #777;
+    color: ${theme.colors.gray};
   }
 `;
 
 const TextError = styled.p`
-  color: #ff3030;
-  margin: 2px 0 0 4px;
+  color: ${theme.colors.red};
+  margin: ${theme.pixels.px4} 0 0 ${theme.pixels.px4};
   font-size: 0.75rem;
   position: absolute;
 `;

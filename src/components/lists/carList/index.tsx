@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ICarList } from "../../../interface";
+import theme from "../../../styles/theme";
 import { SpinnerLoading } from "../../spinnerLoading";
 
 interface IProps {
@@ -77,11 +78,12 @@ export default CarList;
 export const Main = styled.main`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
-  background-color: #fff;
-  padding: 12px;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  gap: ${theme.pixels.px20};
+  background-color: ${theme.colors.white};
+  padding: ${theme.pixels.px12};
+  border-radius: ${theme.pixels.px4};
+  box-shadow: ${theme.pixels.px0} ${theme.pixels.px4} ${theme.pixels.px8}
+    rgba(0, 0, 0, 0.05);
 
   @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
@@ -93,10 +95,10 @@ export const Main = styled.main`
 `;
 
 const Section = styled.section`
-  background-color: #f3f3f3;
+  background-color: ${theme.colors.backgroundSecondary};
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: ${theme.pixels.px4};
   overflow: hidden;
 `;
 
@@ -104,48 +106,49 @@ const ImgCar = styled.img`
   width: 100%;
   max-width: 100%;
   height: auto;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+  border-top-right-radius: ${theme.pixels.px4};
+  border-top-left-radius: ${theme.pixels.px4};
   aspect-ratio: 16 / 9;
   object-fit: cover;
   overflow: hidden;
 `;
 
 const ContainerInfo = styled.div`
-  padding: 12px;
+  padding: ${theme.pixels.px12};
 `;
 
 const NameCar = styled.strong`
-  margin-bottom: 8px;
+  margin-bottom: ${theme.pixels.px8};
   display: inline-table;
 `;
 
 const Description = styled.p`
-  color: #999;
-  margin-bottom: 8px;
-  font-size: 0.8em;
+  color: ${theme.colors.darkText};
+  margin-bottom: ${theme.pixels.px8};
+  font-size: 0.9em;
 `;
 
 const Price = styled.h3`
-  margin-bottom: 12px;
-  font-size: 1.1em;
+  margin-bottom: ${theme.pixels.px12};
+  font-size: 1.3em;
+  color: ${theme.colors.buttonHover};
 `;
 
 const Divider = styled.div`
   width: 100%;
   border: 1px solid #ddd;
-  margin: 8px 0;
+  margin: ${theme.pixels.px8} 0;
 `;
 
 const Locality = styled.p`
-  margin-bottom: 4px;
-  color: #999;
+  margin-bottom: ${theme.pixels.px4};
+  color: ${theme.colors.darkText};
   font-size: 0.8em;
   font-weight: bold;
 `;
 
 const MessageEmpty = styled.p`
   text-align: center;
-  margin: 10px;
-  margin-top: 40px;
+  margin: ${theme.pixels.px12};
+  margin-top: ${theme.pixels.px40};
 `;

@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { FieldError } from "react-hook-form";
 import styled from "styled-components";
+import theme from "../styles/theme";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errors: FieldError | undefined;
@@ -13,7 +14,7 @@ export const InputForm = forwardRef<HTMLInputElement, IProps>(
       <Container>
         <Label>{label}</Label>
         <Input
-          style={{ border: errors && "2px solid #ff3030" }}
+          style={{ border: errors && `2px solid ${theme.colors.red}` }}
           ref={ref}
           {...otherProps}
         />
@@ -25,25 +26,25 @@ export const InputForm = forwardRef<HTMLInputElement, IProps>(
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: ${theme.pixels.px20};
   flex: 1;
-  min-width: 150px; 
+  min-width: 150px;
 `;
 
 const Label = styled.p`
-  font-size: 13px;
-  color: #444;
-  margin: 0 0 2px 2px;
+  font-size: ${theme.fontSize.fs14};
+  color: ${theme.colors.darkText};
+  margin: 0 0 ${theme.pixels.px4} ${theme.pixels.px4};
 `;
 
 const Input = styled.input`
-  padding: 4px;
-  border-radius: 4px;
-  border: 2px solid #999;
+  padding: ${theme.padding.p4};
+  border-radius: ${theme.borderRadius.radius4};
+  border: 2px solid ${theme.colors.gray};
 
   &:-webkit-autofill {
     background-color: transparent !important;
-    border-radius: 4px;
+    border-radius: ${theme.borderRadius.radius4};
     -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   }
 `;

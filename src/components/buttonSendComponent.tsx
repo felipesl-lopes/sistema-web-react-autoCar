@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { SpinnerLoading } from "./spinnerLoading";
 import { AuthContext } from "../contexts/AuthContext";
+import theme from "../styles/theme";
+import { SpinnerLoading } from "./spinnerLoading";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
@@ -25,9 +26,9 @@ export const ButtonSendComponent: React.FunctionComponent<IProps> = ({
 };
 
 const Container = styled.button`
-  border-radius: 4px;
+  border-radius: ${theme.borderRadius.radius4};
   width: 100%;
-  background-color: #3485ff;
+  background-color: ${theme.colors.buttonFixed};
   border: none;
   cursor: pointer;
   transition-duration: 0.5s;
@@ -37,11 +38,11 @@ const Container = styled.button`
   align-items: center;
 
   &:hover {
-    background-color: #237bff;
+    background-color: #d79e38;
   }
 
   &:active {
-    background-color: #0066ff;
+    background-color: ${theme.colors.buttonHover};
   }
 
   &:disabled {
@@ -56,9 +57,9 @@ const Container = styled.button`
 `;
 
 const Title = styled.p`
-  padding: 10px;
-  color: #fff;
+  padding: ${theme.padding.p12};
+  color: ${theme.colors.white};
   font-weight: bold;
-  font-size: 14px;
+  font-size: ${theme.fontSize.fs14};
   overflow-wrap: break-word;
 `;

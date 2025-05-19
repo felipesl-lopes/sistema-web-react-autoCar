@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import theme from "../styles/theme";
 
 interface IProps {
   title: string;
@@ -22,22 +23,22 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: ${theme.padding.p12};
 `;
 
 const Title = styled(Link)`
-  color: #3485ff;
+  color: ${theme.colors.buttonFixed};
   font-weight: bold;
   text-decoration: none;
-  font-size: 14px;
+  font-size: ${theme.fontSize.fs14};
 
   &:hover {
-    color: #237bff;
+    color: #d79e38;
     transition-duration: 0.5s;
   }
 
   &:active {
-    color: #0066ff;
+    color: ${theme.colors.buttonHover};
     transition-duration: 0.5s;
   }
 `;

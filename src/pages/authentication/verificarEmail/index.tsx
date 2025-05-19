@@ -7,10 +7,10 @@ import { ButtonSendComponent } from "../../../components/buttonSendComponent";
 import { ContainerComponent } from "../../../components/Container";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
-import axiosService from "../../../services/api";
-import { Container, Title } from "../styled";
 import { getErrorMessage } from "../../../errors/authErrors";
-import HeaderAuth from "../../../components/headerAuth";
+import axiosService from "../../../services/api";
+import theme from "../../../styles/theme";
+import { Container, Title } from "../styled";
 
 const CheckEmail: React.FunctionComponent = () => {
   const { setLoadingButton, signed } = useContext(AuthContext);
@@ -47,7 +47,6 @@ const CheckEmail: React.FunctionComponent = () => {
 
   return (
     <Container>
-      <HeaderAuth />
       <Spacer spacing={5} />
 
       <ContainerComponent>
@@ -82,7 +81,7 @@ const CheckEmail: React.FunctionComponent = () => {
 
             <Spacer spacing={1} />
 
-            <ButtonNavigateComponent link="/login" title="Login" />
+            <ButtonNavigateComponent link="/login" title="Entrar" />
           </Form>
         </Body>
       </ContainerComponent>
@@ -95,19 +94,19 @@ export default CheckEmail;
 const Body = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: ${theme.pixels.px20};
   justify-content: center;
   margin-top: 10vh;
 `;
 
 const Form = styled.form`
-  padding: 16px;
+  padding: ${theme.padding.p16};
   width: 100%;
   align-items: center;
   display: flex;
   flex-direction: column;
   border: 2px solid #ccc;
-  border-radius: 8px;
+  border-radius: ${theme.borderRadius.radius8};
   max-width: 620px;
   margin: auto;
 `;
@@ -117,6 +116,8 @@ const Text = styled.p`
 `;
 
 const Email = styled.strong`
+  color: ${theme.colors.golden};
+
   @media (max-width: 280px) {
     word-break: break-all;
   }

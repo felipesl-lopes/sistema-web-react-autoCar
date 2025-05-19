@@ -6,16 +6,15 @@ import Register from "../pages/authentication/register";
 import CheckEmail from "../pages/authentication/verificarEmail";
 import CarDetails from "../pages/carDetails";
 import Dashboard from "../pages/dashboard";
+import { MyFavorites } from "../pages/dashboard/myFavorites";
 import { MyVehicles } from "../pages/dashboard/myVehicles";
 import New from "../pages/dashboard/new";
 import Home from "../pages/home";
 import { Private } from "./Private";
-import { MyFavorites } from "../pages/dashboard/myFavorites";
 
 const router = createBrowserRouter([
   {
     element: <LayoutComponent />,
-    // Rotas do header superior
     children: [
       {
         path: "/",
@@ -25,8 +24,6 @@ const router = createBrowserRouter([
         path: "/car/:id",
         element: <CarDetails />,
       },
-
-      // Rotas do header inferior
       {
         path: "/dashboard",
         element: (
@@ -59,26 +56,25 @@ const router = createBrowserRouter([
           </Private>
         ),
       },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/recoverPassword",
+        element: <RecoverPassword />,
+      },
+      {
+        path: "/verificar-email",
+        element: <CheckEmail />,
+      },
     ],
-  },
-
-  // Rotas sem header
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/recoverPassword",
-    element: <RecoverPassword />,
-  },
-  {
-    path: "/verificar-email",
-    element: <CheckEmail />,
   },
 ]);
 
 export { router };
+
