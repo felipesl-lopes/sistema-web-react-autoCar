@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ContainerComponent } from "../../components/Container";
 import CarList from "../../components/lists/carList";
 import { Spacer } from "../../components/spacer";
@@ -6,6 +7,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import CarAdButtonComponent from "./CarAdButtonComponent";
+import CarPurchaseTips from "./CarPurchaseTips";
+import InfoBarComponent from "./InfoBarComponent";
 import QuickFilterComponent from "./QuickFilterComponent";
 import Sliders_Home from "./sliders-home";
 import {
@@ -14,64 +17,19 @@ import {
   ContainerSearch,
   ContainerWrapper,
   InputSearch,
-  TextResult,
   Title,
 } from "./styled";
 import WhyChooseUsComponent from "./WhyChooseUsComponent";
-import CarPurchaseTips from "./CarPurchaseTips";
-import InfoBarComponent from "./InfoBarComponent";
 
 const Home: React.FunctionComponent = () => {
-  const [carList, setCarList] = useState<ICarList[]>([]);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [carList, setCarList] = useState<ICarList[]>([]);
   const [inputCar, setInputCar] = useState("");
-  const [oldInputCar, setOldInputCar] = useState("");
 
   useEffect(() => {
-    loadCarList();
-  }, []);
-
-  const loadCarList = async () => {
-    await axiosService.get("/firestore/carList").then(({ data }) => {
-      let list = [] as ICarList[];
-      setCarList([]);
-      data.forEach((doc: ICarList) => {
-        if (user?.uid !== doc.uidUser) {
-          list.push({
-            uidUser: doc.uidUser,
-            id: doc.id,
-            name: doc.name,
-            year: doc.year,
-            price: doc.price,
-            city: doc.city,
-            uf: doc.uf,
-            km: doc.km,
-            images: doc.images,
-            model: doc.model,
-          });
-        }
-      });
-      setCarList(list);
-    });
-  };
-
-  const searchCarList = async () => {
-    setOldInputCar(inputCar);
-
-    if (oldInputCar == inputCar) {
-      return;
-    }
-
-    if (inputCar == "") {
-      await loadCarList();
-      return;
-    }
-
-    setCarList([]);
-
-    await axiosService
-      .get("/firestore/searchCar", { params: { inputCar } })
-      .then(({ data }) => {
+    (async () => {
+      await axiosService.get("/firestore/carList").then(({ data }) => {
         let list = [] as ICarList[];
         setCarList([]);
         data.forEach((doc: ICarList) => {
@@ -92,6 +50,18 @@ const Home: React.FunctionComponent = () => {
         });
         setCarList(list);
       });
+    })();
+  }, [user]);
+
+  /**
+   * Função responsável por navegar para a tela de pesquisa,
+   * incluindo o termo digitado no input como parâmetro na URL (query string).
+   *
+   * Isso permite que a tela de pesquisa capture o termo via React Router
+   * e realize a busca correspondente.
+   */
+  const handleSearch = () => {
+    navigate(`/search?carro=${encodeURIComponent(inputCar)}`);
   };
 
   return (
@@ -108,7 +78,6 @@ const Home: React.FunctionComponent = () => {
         <ContainerSearch
           onClick={(e) => {
             e.preventDefault();
-            searchCarList();
           }}
         >
           <InputSearch
@@ -116,23 +85,16 @@ const Home: React.FunctionComponent = () => {
             value={inputCar}
             onChange={(e) => setInputCar(e.target.value)}
           />
-          <ButtonSearch>Pesquisar</ButtonSearch>
+          <ButtonSearch onClick={handleSearch}>Pesquisar</ButtonSearch>
         </ContainerSearch>
 
         <Spacer spacing={10} />
 
-        <TextResult>
-          {oldInputCar
-            ? `Exibindo resultado de pesquisa para: ${oldInputCar}`
-            : `Resultados:`}
-        </TextResult>
-
-        <Spacer spacing={6} />
-
         <ContainerComponent>
           <CarList
             carList={carList}
-            messageListEmpty="Nenhum veículo para venda foi encontrado."
+            limit={6}
+            messageListEmpty="Nenhum veículo foi encontrado."
           />
 
           <Spacer spacing={6} />

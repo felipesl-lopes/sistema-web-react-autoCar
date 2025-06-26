@@ -8,11 +8,21 @@ import { SpinnerLoading } from "../../spinnerLoading";
 interface IProps {
   carList: ICarList[];
   messageListEmpty: string;
+  limit?: number;
 }
 
+/**
+ * Componente responsável por exibir a lista de carros.
+ *
+ * Props:
+ * - carList: Lista de veículos a serem exibidos.
+ * - messageListEmpty: Mensagem mostrada quando a lista estiver vazia.
+ * - limit (opcional): Número máximo de itens a serem exibidos.
+ */
 const CarList: React.FunctionComponent<IProps> = ({
   carList,
   messageListEmpty,
+  limit,
 }) => {
   const [load, setLoad] = useState(true);
 
@@ -23,10 +33,14 @@ const CarList: React.FunctionComponent<IProps> = ({
   return (
     <>
       {carList.length == 0 ? (
-        <MessageEmpty>{messageListEmpty}</MessageEmpty>
+        <Main style={{ display: "flex", justifyContent: "center" }}>
+          <MessageEmpty style={{ margin: theme.pixels.px40 }}>
+            {messageListEmpty}
+          </MessageEmpty>
+        </Main>
       ) : (
         <Main>
-          {carList.map((car) => (
+          {carList.slice(0, limit ?? carList.length).map((car) => (
             <Link
               to={`/car/${car.id}`}
               key={car.id}

@@ -11,6 +11,7 @@ import { MyVehicles } from "../pages/dashboard/myVehicles";
 import New from "../pages/dashboard/new";
 import Home from "../pages/home";
 import { Private } from "./Private";
+import Search from "../pages/search";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             <Dashboard />
           </Private>
         ),
+      },
+      {
+        path: "/search",
+        element: <Search />,
       },
       {
         path: "/dashboard/new",
@@ -77,4 +82,3 @@ const router = createBrowserRouter([
 ]);
 
 export { router };
-
