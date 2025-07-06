@@ -11,6 +11,8 @@ import { ContainerComponent } from "../../../components/Container";
 import { InputForm } from "../../../components/inputForm";
 import { Spacer } from "../../../components/spacer";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { fuelList } from "../../../data/fuelList";
+import { marcaList } from "../../../data/marcasList";
 import { createDocCarFirestore } from "../../../functions/firestore";
 import { IFormNewCar } from "../../../interface";
 import { TitleDashboard } from "../styled";
@@ -38,15 +40,7 @@ import {
 const New: React.FunctionComponent = () => {
   const { user, setLoadingButton, emailVerified } = useContext(AuthContext);
   const transmissionList = ["Manual", "Automático", "Automatizado"];
-  const fuelList = [
-    "Gasolina",
-    "Etanol",
-    "Diesel",
-    "GNV",
-    "Flex",
-    "Elétrico",
-    "Híbrido",
-  ];
+
   const [listImages, setListImages] = useState<
     { previewUrl: string; file: File }[]
   >([]);
@@ -140,6 +134,10 @@ const New: React.FunctionComponent = () => {
     setValue("transmission", e.target.value);
   };
 
+  const handleName = (e: any) => {
+    setValue("name", e.target.value);
+  };
+
   const handleFuel = (e: any) => {
     setValue("fuel", e.target.value);
   };
@@ -177,13 +175,16 @@ const New: React.FunctionComponent = () => {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <TitleForm>Informações gerais</TitleForm>
           <ContainerInput>
-            <InputForm
-              errors={errors.name}
-              {...register("name")}
-              label="Marca"
-              placeholder="Marca do veículo"
-              id="name"
-            />
+            <ContainerSelect>
+              <Label>Marca</Label>
+              <Select {...register("name")} onChange={handleName}>
+                {marcaList.map((item, index) => (
+                  <Option key={index} value={item}>
+                    {item}
+                  </Option>
+                ))}
+              </Select>
+            </ContainerSelect>
 
             <InputForm
               errors={errors.model}
@@ -201,7 +202,7 @@ const New: React.FunctionComponent = () => {
               max={new Date().getFullYear()}
               min={1960}
               label="Ano"
-              placeholder="2024"
+              placeholder={new Date().getFullYear().toString()}
               id="year"
               type="number"
             />

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FiX } from "react-icons/fi";
+import theme from "../../../styles/theme";
 
 export const Div = styled.div`
   background-color: white;
@@ -91,7 +92,7 @@ export const ContainerInput = styled.main`
 export const TitleForm = styled.strong`
   margin-bottom: 16px;
   color: #777;
-  background-color:rgb(237, 237, 237);
+  background-color: rgb(237, 237, 237);
   text-align: center;
   padding: 2px;
 `;
@@ -132,16 +133,15 @@ export const ContainerSelect = styled.div`
 `;
 
 export const Label = styled.p`
-  font-size: 13px;
-  color: #444;
-  margin: 0 0 2px 2px;
+  font-size: ${theme.fontSize.fs14};
+  color: ${theme.colors.darkText};
+  margin: 0 0 ${theme.pixels.px4} ${theme.pixels.px4};
 `;
 
 export const Select = styled.select`
   padding: 4px;
   border: 2px solid #999;
   border-radius: 4px;
-  flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
   width: 100%;

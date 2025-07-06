@@ -13,12 +13,13 @@ import { ICarList } from "../../interface";
 import axiosService from "../../services/api";
 import { AuthContext } from "../../contexts/AuthContext";
 import CarList from "../../components/lists/carList";
+import Filter from "./filter";
 
 const Search: React.FunctionComponent = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const searchQuery = params.get("carro");
-  const [inputCar, setInputCar] = useState(searchQuery ? searchQuery : "");
+  const [inputCar, setInputCar] = useState(searchQuery || "");
   const navigate = useNavigate();
   const [carList, setCarList] = useState<ICarList[]>([]);
   const { user } = useContext(AuthContext);
@@ -135,15 +136,19 @@ const Search: React.FunctionComponent = () => {
 
         <Spacer spacing={10} />
 
-        <ContainerComponent>
-          <CarList
-            carList={carList}
-            limit={6}
-            messageListEmpty="Nenhum veículo foi encontrado."
-          />
+        <div style={{flexDirection: "row", display: "flex"}}>
+          <Filter />
 
-          <Spacer spacing={6} />
-        </ContainerComponent>
+          <ContainerComponent>
+            <CarList
+              carList={carList}
+              limit={6}
+              messageListEmpty="Nenhum veículo foi encontrado."
+            />
+
+            <Spacer spacing={6} />
+          </ContainerComponent>
+        </div>
       </Container>
     </ContainerComponent>
   );
